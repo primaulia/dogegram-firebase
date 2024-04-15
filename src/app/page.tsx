@@ -17,7 +17,7 @@ export default async function Page() {
       <h1>Hello world</h1>
       <ul>
         {restaurants?.map((resto) => {
-          return <li key={resto.id}>{resto.name}</li>;
+          return <li key={resto.id}>{resto.id}</li>;
         })}
       </ul>
     </>
