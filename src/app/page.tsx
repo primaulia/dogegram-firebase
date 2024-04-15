@@ -1,4 +1,5 @@
 import getData from "@/firebase/firestore/getData";
+import SideNav from "@/app/components/sidenav";
 
 export default async function Page() {
   const { results, error } = await getData();
@@ -13,13 +14,11 @@ export default async function Page() {
   });
 
   return (
-    <>
-      <h1>Hello world</h1>
-      <ul>
-        {restaurants?.map((resto) => {
-          return <li key={resto.id}>{resto.id}</li>;
-        })}
-      </ul>
-    </>
+    <main className="flex h-screen flex-col md:flex-row md:overflow-hidden">
+      <div className="w-full flex-none md:w-64">
+        <SideNav />
+      </div>
+      <div className="flex-grow p-6 md:overflow-y-auto md:p-12">Right side</div>
+    </main>
   );
 }
