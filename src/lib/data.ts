@@ -15,7 +15,7 @@ export async function fetchBreeds() {
 export async function fetchRandomImageByBreed(breed: string): Promise<string> {
   try {
     const url = `https://dog.ceo/api/breed/${breed}/images/random`;
-    const { message } = await httpGet<BreedsResponse>(url);
+    const { message } = await httpGet<ImageResponse>(url);
     return message;
   } catch (error) {
     console.error("Fetch Error:", error);

@@ -3,14 +3,12 @@ import Image from "next/image";
 import { fetchHomePage } from "@/lib/data";
 import { rgbDataURL } from "@/lib/utils";
 import { futura } from "@/app/ui/fonts";
-import { CSSProperties } from "react-css-modules";
 
 export default async function Page() {
   const homepageData = await fetchHomePage();
-  const imageStyle: CSSProperties = {
+  const imageStyle = {
     borderRadius: "50%",
     border: "1px solid #fff",
-    objectFit: "cover",
     zIndex: -1,
     filter: "blur(1px)",
   };
@@ -49,6 +47,7 @@ export default async function Page() {
                   alt={entry[0]}
                   placeholder="blur"
                   blurDataURL={rgbDataURL(237, 181, 6)}
+                  objectFit="cover"
                   style={imageStyle}
                 />
               </li>
