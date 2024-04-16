@@ -2,11 +2,12 @@
 
 import { useEffect } from "react";
 import Link from "next/link";
-import NavLinks from "@/app/components/nav-links";
+import NavLinks from "@/app/components/NavLinks";
 import { PowerIcon } from "@heroicons/react/24/outline";
 import { useAuthContext } from "@/context/AuthContext";
 import { useRouter } from "next/navigation";
 import signOut from "@/firebase/auth/signout";
+import { futura } from "@/app/ui/fonts";
 
 // import { onAuthStateChanged } from "@/src/lib/firebase/auth.js";
 
@@ -63,7 +64,9 @@ export default function SideNav() {
         className="mb-2 flex h-20 items-end justify-start rounded-md bg-yellow-900 p-4 md:h-40"
         href="/"
       >
-        <div className="w-32 text-white md:w-40">Dogegram</div>
+        <div className="w-32 text-white md:w-40">
+          <h1 className={futura.className}>Dogegram</h1>
+        </div>
       </Link>
       <div className="flex grow flex-row justify-between space-x-2 md:flex-col md:space-x-0 md:space-y-2">
         <NavLinks />

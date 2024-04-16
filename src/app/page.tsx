@@ -1,17 +1,10 @@
-import SideNav from "@/app/components/sidenav";
-import Image from "next/image";
+import SideNav from "@/app/components/SideNav";
+import Breed from "@/app/components/Breed";
 import { fetchHomePage } from "@/lib/data";
-import { rgbDataURL } from "@/lib/utils";
 import { futura } from "@/app/ui/fonts";
 
 export default async function Page() {
   const homepageData = await fetchHomePage();
-  const imageStyle = {
-    borderRadius: "50%",
-    border: "1px solid #fff",
-    zIndex: -1,
-    filter: "blur(1px)",
-  };
 
   return (
     <main className="flex h-screen flex-col md:flex-row md:overflow-hidden">
@@ -29,30 +22,9 @@ export default async function Page() {
           </p>
         </div>
         <ul className="grid grid-cols-7 gap-4">
-          {Object.entries(homepageData).map((entry) => {
-            return (
-              <li
-                className="relative w-[160px] h-[160px] flex justify-center items-center cursor-pointer"
-                key={entry[0]}
-              >
-                <h3
-                  className={`${futura.className} text-white drop-shadow-[0_1.2px_1.2px_rgba(0,0,0,0.8)]`}
-                >
-                  {entry[0]}
-                </h3>
-                <Image
-                  src={entry[1]}
-                  sizes="160px"
-                  fill
-                  alt={entry[0]}
-                  placeholder="blur"
-                  blurDataURL={rgbDataURL(237, 181, 6)}
-                  objectFit="cover"
-                  style={imageStyle}
-                />
-              </li>
-            );
-          })}
+          {Object.entries(homepageData).map(([breed, image]) => (
+            <Breed key={breed} breed={breed} image={image} />
+          ))}
         </ul>
       </div>
     </main>
