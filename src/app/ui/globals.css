@@ -16,6 +16,22 @@
   }
 }
 
+h1 {
+  font-size: 25;
+}
+
+h2 {
+  font-size: 1.3rem;
+}
+
+h3 {
+  font-size: 1.25rem;
+}
+
+h4 {
+  font-size: 1rem;
+}
+
 @layer utilities {
   .text-balance {
     text-wrap: balance;
