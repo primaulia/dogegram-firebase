@@ -26,8 +26,8 @@ export default async function Page() {
         </h2>
         <div className=" flex justify-center">
           <p className="bg-gray-50 rounded-md p-3 w-1/2 mb-4">
-            Once you've picked your top three doggo breeds. We will then feed
-            you with our curated pawsome photos especially for you. 🐾
+            Once you&apos;ve picked your top three doggo breeds. We will then
+            feed you with our curated pawsome photos especially for you. 🐾
           </p>
         </div>
         <ul className="grid grid-cols-7 gap-4">

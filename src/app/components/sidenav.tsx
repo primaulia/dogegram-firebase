@@ -55,7 +55,7 @@ export default function SideNav() {
 
   useEffect(() => {
     if (user == null) router.refresh();
-  }, [user]);
+  }, [user, router]);
 
   return (
     <div className="flex h-full flex-col px-3 py-4 md:px-2">
