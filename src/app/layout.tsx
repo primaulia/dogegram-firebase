@@ -11,7 +11,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={work.className}>
+      <body className={`${work.className} antialiased`}>
         <AuthContextProvider>{children}</AuthContextProvider>
       </body>
     </html>
