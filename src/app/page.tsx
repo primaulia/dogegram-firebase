@@ -1,10 +1,10 @@
 import SideNav from "@/app/components/SideNav";
-import Breed from "@/app/components/Breed";
+import BreedList from "@/app/components/BreedList";
 import { fetchHomePage } from "@/lib/data";
 import { futura } from "@/app/ui/fonts";
 
 export default async function Page() {
-  const homepageData = await fetchHomePage();
+  const breeds = await fetchHomePage();
 
   return (
     <main className="flex h-screen flex-col md:flex-row md:overflow-hidden">
@@ -21,11 +21,7 @@ export default async function Page() {
             feed you with our curated pawsome photos especially for you. 🐾
           </p>
         </div>
-        <ul className="grid grid-cols-7 gap-4">
-          {Object.entries(homepageData).map(([breed, image]) => (
-            <Breed key={breed} breed={breed} image={image} />
-          ))}
-        </ul>
+        <BreedList breeds={breeds} />
       </div>
     </main>
   );
