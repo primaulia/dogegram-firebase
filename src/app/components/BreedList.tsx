@@ -6,6 +6,7 @@ import { deleteBreed, getBreedsByUserId } from "@/firebase/firestore/breeds";
 import { useAuthContext } from "@/context/AuthContext";
 import { useRouter } from "next/navigation";
 import { saveBreed } from "@/firebase/firestore/breeds";
+import Link from "next/link";
 
 export default function BreedList({
   breeds,
@@ -66,18 +67,34 @@ export default function BreedList({
   };
 
   return (
-    <ul className="grid grid-cols-6 gap-4">
-      {Object.entries(breeds).map(([breed, image]) => {
-        return (
-          <BreedIcon
-            key={breed}
-            breed={breed}
-            image={image}
-            selected={savedBreeds.includes(breed)}
-            handleClick={handleIconClick}
-          />
-        );
-      })}
-    </ul>
+    <>
+      {savedBreeds.length ? (
+        <div className="flex justify-center">
+          <div className="bg-gray-50 rounded-md p-3 w-1/2 mb-4">
+            <h2>View feeds</h2>
+            <Link href="/feeds">
+              <p>View feeds</p>
+            </Link>
+          </div>
+        </div>
+      ) : (
+        ""
+      )}
+      <ul className="grid grid-cols-6 gap-4">
+        {Object.entries(breeds).map(([breed, image]) => {
+          return (
+            <>
+              <BreedIcon
+                key={breed}
+                breed={breed}
+                image={image}
+                selected={savedBreeds.includes(breed)}
+                handleClick={handleIconClick}
+              />
+            </>
+          );
+        })}
+      </ul>
+    </>
   );
 }
