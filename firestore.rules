@@ -36,5 +36,9 @@ service cloud.firestore {
     match /breeds/{breedId} {
       allow read, write: if request.auth != null;
     }
+
+    match /doggos/{doggoId} {
+      allow read, write: if request.auth != null;
+    }
   }
 }
