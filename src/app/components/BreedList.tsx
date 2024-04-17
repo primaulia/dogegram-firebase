@@ -2,7 +2,7 @@
 
 import BreedIcon from "@/app/components/BreedIcon";
 import { useEffect, useState } from "react";
-import { getBreedsByUserId } from "@/firebase/firestore/breeds";
+import { deleteBreed, getBreedsByUserId } from "@/firebase/firestore/breeds";
 import { useAuthContext } from "@/context/AuthContext";
 import { useRouter } from "next/navigation";
 import { saveBreed } from "@/firebase/firestore/breeds";
@@ -39,6 +39,12 @@ export default function BreedList({
     if (!user) {
       console.error("User hasn't logged in yet");
       router.push("/login");
+      return;
+    }
+
+    if (savedBreeds.includes(breed)) {
+      await deleteBreed(breed, user.uid);
+      setSavedBreeds(savedBreeds.filter((b) => b !== breed));
       return;
     }
 
