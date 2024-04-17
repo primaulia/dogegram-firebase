@@ -81,19 +81,15 @@ export default function BreedList({
         ""
       )}
       <ul className="grid grid-cols-6 gap-4">
-        {Object.entries(breeds).map(([breed, image]) => {
-          return (
-            <>
-              <BreedIcon
-                key={breed}
-                breed={breed}
-                image={image}
-                selected={savedBreeds.includes(breed)}
-                handleClick={handleIconClick}
-              />
-            </>
-          );
-        })}
+        {Object.entries(breeds).map(([breed, image]) => (
+          <BreedIcon
+            key={breed}
+            breed={breed}
+            image={image}
+            selected={savedBreeds.includes(breed)}
+            handleClick={handleIconClick}
+          />
+        ))}
       </ul>
     </>
   );

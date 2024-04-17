@@ -9,3 +9,8 @@ export type ImageResponse = {
   message: string;
   status: string;
 };
+
+export type ImagesResponse = {
+  message: string[];
+  status: string;
+};

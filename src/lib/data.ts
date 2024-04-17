@@ -1,5 +1,5 @@
 import { httpGet } from "./utils";
-import { BreedsResponse, ImageResponse } from "./definitions";
+import { BreedsResponse, ImageResponse, ImagesResponse } from "./definitions";
 
 export async function fetchBreeds() {
   try {
@@ -20,6 +20,19 @@ export async function fetchRandomImageByBreed(breed: string): Promise<string> {
   } catch (error) {
     console.error("Fetch Error:", error);
     throw new Error("Failed to fetch random image data.");
+  }
+}
+
+export async function fetchRandomImagesByBreed(
+  breed: string
+): Promise<string[]> {
+  try {
+    const url = `https://dog.ceo/api/breed/${breed}/images`;
+    const { message } = await httpGet<ImagesResponse>(url);
+    return message;
+  } catch (error) {
+    console.error("Fetch Error:", error);
+    throw new Error("Failed to fetch image data.");
   }
 }
 
