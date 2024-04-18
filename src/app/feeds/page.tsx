@@ -4,6 +4,7 @@ import { getBreedsByUserId } from "@/firebase/firestore/breeds";
 import {
   saveDoggoPhoto,
   getDoggoPhotosByUserId,
+  deleteDoggoPhoto,
 } from "@/firebase/firestore/doggos";
 import { useAuthContext } from "@/context/AuthContext";
 import { useEffect, useState } from "react";
@@ -64,6 +65,12 @@ export default function Page() {
   }, [user, router]);
 
   const handleLike = async (photoUrl: string) => {
+    if (savedPhotos.includes(photoUrl)) {
+      await deleteDoggoPhoto(photoUrl, user!.uid);
+      setSavedPhotos(savedPhotos.filter((p) => p !== photoUrl));
+      return;
+    }
+
     const { error } = await saveDoggoPhoto({
       url: photoUrl,
       user_id: user!.uid,
