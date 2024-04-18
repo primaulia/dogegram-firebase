@@ -7,6 +7,7 @@ import { useAuthContext } from "@/context/AuthContext";
 import { useRouter } from "next/navigation";
 import { saveBreed } from "@/firebase/firestore/breeds";
 import Link from "next/link";
+import { futura } from "@/app/ui/fonts";
 
 export default function BreedList({
   breeds,
@@ -14,14 +15,20 @@ export default function BreedList({
   breeds: Record<string, string>;
 }) {
   const user = useAuthContext();
-  const [savedBreeds, setSavedBreeds] = useState<string[]>([]);
+  const [savedBreeds, setSavedBreeds] = useState<
+    { name: string; iconUrl: string }[]
+  >([]);
 
   useEffect(() => {
     const fetchSavedBreeds = async () => {
       try {
         const { result: snapshots } = await getBreedsByUserId(user!.uid);
         const savedBreedsData = snapshots!.map((doc) => {
-          return doc.data().name;
+          const breedName = doc.data().name;
+          return {
+            name: breedName,
+            iconUrl: breeds[breedName],
+          };
         });
 
         setSavedBreeds(savedBreedsData);
@@ -43,9 +50,9 @@ export default function BreedList({
       return;
     }
 
-    if (savedBreeds.includes(breed)) {
+    if (savedBreeds.some((b) => b.name === breed)) {
       await deleteBreed(breed, user.uid);
-      setSavedBreeds(savedBreeds.filter((b) => b !== breed));
+      setSavedBreeds(savedBreeds.filter((b) => b.name !== breed));
       return;
     }
 
@@ -60,7 +67,13 @@ export default function BreedList({
     });
 
     if (!error) {
-      setSavedBreeds([...savedBreeds, breed]);
+      setSavedBreeds([
+        ...savedBreeds,
+        {
+          name: breed,
+          iconUrl: breeds[breed],
+        },
+      ]);
     } else {
       console.error(error);
     }
@@ -70,11 +83,29 @@ export default function BreedList({
     <>
       {savedBreeds.length ? (
         <div className="flex justify-center">
-          <div className="bg-gray-50 rounded-md p-3 w-1/2 mb-4">
-            <h2>View feeds</h2>
-            <Link href="/feeds">
-              <p>View feeds</p>
-            </Link>
+          <div className="bg-gray-50 rounded-md p-3 w-3/4 mb-4">
+            <h2 className={`${futura.className} text-center`}>
+              Your selected doggo breeds
+            </h2>
+            <ul className="flex justify-center gap-2">
+              {savedBreeds.map(({ name, iconUrl }) => (
+                <BreedIcon
+                  key={name}
+                  breed={name}
+                  image={iconUrl}
+                  selected={true}
+                  handleClick={handleIconClick}
+                />
+              ))}
+            </ul>
+            <div className="flex justify-center">
+              <Link
+                href="/feeds"
+                className="my-2 bg-yellow-600 text-white md:p-2 md:px-3 rounded-md hover:bg-yellow-500"
+              >
+                <button>View feed</button>
+              </Link>
+            </div>
           </div>
         </div>
       ) : (
@@ -86,7 +117,7 @@ export default function BreedList({
             key={breed}
             breed={breed}
             image={image}
-            selected={savedBreeds.includes(breed)}
+            selected={savedBreeds.some((b) => b.name === breed)}
             handleClick={handleIconClick}
           />
         ))}

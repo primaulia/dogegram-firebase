@@ -11,7 +11,7 @@ const links = [
   { name: "Home", href: "/", icon: HomeIcon },
   { name: "Feeds", href: "/feeds", icon: EyeIcon },
   {
-    name: "My favourite doggo",
+    name: "My favourite doggos",
     href: "/favourites",
     icon: HeartIcon,
   },
