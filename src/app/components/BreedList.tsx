@@ -84,7 +84,7 @@ export default function BreedList({
       {savedBreeds.length ? (
         <div className="flex justify-center">
           <div className="bg-gray-50 rounded-md p-3 w-3/4 mb-4">
-            <h2 className={`${futura.className} text-center`}>
+            <h2 className={`${futura.className} text-center mb-2`}>
               Your selected doggo breeds
             </h2>
             <ul className="flex justify-center gap-2">
@@ -94,6 +94,7 @@ export default function BreedList({
                   breed={name}
                   image={iconUrl}
                   selected={true}
+                  blurred={false}
                   handleClick={handleIconClick}
                 />
               ))}
@@ -101,7 +102,7 @@ export default function BreedList({
             <div className="flex justify-center">
               <Link
                 href="/feeds"
-                className="my-2 bg-yellow-600 text-white md:p-2 md:px-3 rounded-md hover:bg-yellow-500"
+                className="my-2 bg-yellow-600 text-white md:p-2 md:px-3 rounded-md hover:bg-yellow-500 text-sm font-medium"
               >
                 <button>View feed</button>
               </Link>
@@ -118,6 +119,7 @@ export default function BreedList({
             breed={breed}
             image={image}
             selected={savedBreeds.some((b) => b.name === breed)}
+            blurred={true}
             handleClick={handleIconClick}
           />
         ))}
