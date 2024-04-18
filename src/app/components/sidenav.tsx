@@ -47,6 +47,7 @@ export default function SideNav() {
   const handleSignOut = (event: { preventDefault: () => void }) => {
     event.preventDefault();
     signOut();
+    router.push("/login");
   };
 
   const handleLogin = (event: { preventDefault: () => void }) => {
