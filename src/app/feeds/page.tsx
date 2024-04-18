@@ -70,8 +70,6 @@ export default function Page() {
     });
 
     if (!error) {
-      console.log("saved");
-
       setSavedPhotos([...savedPhotos, photoUrl]);
     } else {
       console.error(error);
@@ -80,7 +78,7 @@ export default function Page() {
 
   return (
     <>
-      {user ? (
+      {user && (
         <ul className="grid grid-cols-2 gap-3">
           {doggoPhotos.map((photo) => (
             <DoggoPhoto
@@ -91,8 +89,6 @@ export default function Page() {
             />
           ))}
         </ul>
-      ) : (
-        <h1>Login first</h1>
       )}
     </>
   );
