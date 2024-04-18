@@ -8,6 +8,7 @@ import { useRouter } from "next/navigation";
 import { saveBreed } from "@/firebase/firestore/breeds";
 import Link from "next/link";
 import { futura } from "@/app/ui/fonts";
+import Button from "@/app/components/Button";
 
 export default function BreedList({
   breeds,
@@ -99,14 +100,12 @@ export default function BreedList({
                 />
               ))}
             </ul>
-            <div className="flex justify-center">
-              <Link
-                href="/feeds"
-                className="my-2 bg-yellow-600 text-white md:p-2 md:px-3 rounded-md hover:bg-yellow-500 text-sm font-medium"
-              >
-                <button>View feed</button>
-              </Link>
-            </div>
+            <Link
+              href="/feed"
+              className="my-2 bg-yellow-600 text-white rounded-md hover:bg-yellow-500 text-sm font-medium"
+            >
+              <Button className="mt-4 w-full">View feed</Button>
+            </Link>
           </div>
         </div>
       ) : (
