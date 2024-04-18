@@ -5,6 +5,9 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { getDoggoPhotosByUserId } from "@/firebase/firestore/doggos";
 import DoggoPhoto from "@/app/components/DoggoPhoto";
+import { futura } from "@/app/ui/fonts";
+import Link from "next/link";
+import Button from "@/app/components/Button";
 
 export default function Page() {
   const user = useAuthContext();
@@ -35,18 +38,26 @@ export default function Page() {
 
   return (
     <>
-      {user && (
-        <ul className="grid grid-cols-2 gap-3">
-          {savedPhotos.map((photo: string) => (
-            <DoggoPhoto
-              key={photo}
-              photo={photo}
-              saved={true}
-              handleLike={() => {}}
-            />
-          ))}
-        </ul>
+      {!savedPhotos.length && (
+        <div>
+          <h2 className={futura.className}>
+            You have not liked any doggos yet. Why? Much wow!
+          </h2>
+          <Link href="/feed">
+            <Button className="mt-4 w-full">View feed</Button>
+          </Link>
+        </div>
       )}
+      <ul className="grid grid-cols-2 gap-3">
+        {savedPhotos.map((photo: string) => (
+          <DoggoPhoto
+            key={photo}
+            photo={photo}
+            saved={true}
+            handleLike={() => {}}
+          />
+        ))}
+      </ul>
     </>
   );
 }
