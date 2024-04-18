@@ -1,14 +1,16 @@
 "use client";
 
 import { getBreedsByUserId } from "@/firebase/firestore/breeds";
-import { saveDoggoPhoto } from "@/firebase/firestore/doggo";
+import {
+  saveDoggoPhoto,
+  getDoggoPhotosByUserId,
+} from "@/firebase/firestore/doggos";
 import { useAuthContext } from "@/context/AuthContext";
 import { useEffect, useState } from "react";
 import { fetchRandomImagesByBreed } from "@/lib/data";
 import { shuffle } from "@/lib/utils";
 import { useRouter } from "next/navigation";
-import { HeartIcon } from "@heroicons/react/24/outline";
-import { HeartIcon as HearthSolidIcon } from "@heroicons/react/24/solid";
+import DoggoPhoto from "@/app/components/DoggoPhoto";
 
 export default function Page() {
   const user = useAuthContext();
@@ -25,10 +27,18 @@ export default function Page() {
 
     const fetchSavedBreeds = async () => {
       try {
-        const { result: snapshots } = await getBreedsByUserId(user!.uid);
-        const savedBreedsData = snapshots!.map((doc) => {
+        const { result: breedsSnapshots } = await getBreedsByUserId(user!.uid);
+        const savedBreedsData = breedsSnapshots!.map((doc) => {
           return doc.data().name;
         });
+
+        const { result: doggoPhotoSnapshots } = await getDoggoPhotosByUserId(
+          user!.uid
+        );
+        const savedPhotosData = doggoPhotoSnapshots!.map((doc) => {
+          return doc.data().url;
+        });
+        setSavedPhotos([...savedPhotos, ...savedPhotosData]);
 
         let photoUrls: string[] = [];
 
@@ -55,7 +65,7 @@ export default function Page() {
 
   const handleLike = async (photoUrl: string) => {
     const { error } = await saveDoggoPhoto({
-      photoUrl,
+      url: photoUrl,
       user_id: user!.uid,
     });
 
@@ -73,18 +83,12 @@ export default function Page() {
       {user ? (
         <ul className="grid grid-cols-2 gap-3">
           {doggoPhotos.map((photo) => (
-            <li
+            <DoggoPhoto
               key={photo}
-              className="relative w-full h-[480px] bg-cover bg-center my-2 rounded-md cursor-pointer text-center"
-              style={{ backgroundImage: `url(${photo})` }}
-              onClick={() => handleLike(photo)}
-            >
-              {savedPhotos.includes(photo) ? (
-                <HearthSolidIcon className="w-8 absolute right-2 top-2" />
-              ) : (
-                <HeartIcon className="w-8 absolute right-2 top-2" />
-              )}
-            </li>
+              photo={photo}
+              saved={savedPhotos.includes(photo)}
+              handleLike={handleLike}
+            />
           ))}
         </ul>
       ) : (
