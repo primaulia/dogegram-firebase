@@ -96,15 +96,15 @@ export default function BreedList({
   return (
     <>
       <div className="flex justify-center">
-        <div className="bg-gray-50 rounded-md p-3 w-3/4 mb-4">
-          <h2 className={`${futura.className} text-center my-2`}>
+        <div className="bg-gray-50 rounded-md p-2 md:p-3 w-full md:w-3/4 md:mb-4">
+          <h2 className={`${futura.className} md:text-center my-2`}>
             {savedBreeds.length
               ? "Your selected doggo breeds"
-              : "💖 Choose your top 3 doggo breeds 💖"}
+              : "Pick your top 3 doggo breeds 💖"}
           </h2>
           {savedBreeds.length ? (
             <>
-              <ul className="flex justify-center gap-2">
+              <ul className="flex justify-start md:justify-center flex-wrap gap-1 md:gap-2">
                 {savedBreeds.map(({ name, iconUrl }) => (
                   <BreedIcon
                     key={name}
@@ -120,14 +120,14 @@ export default function BreedList({
                 href="/feed"
                 className="my-2 bg-yellow-600 text-white rounded-md hover:bg-yellow-500 text-sm font-medium"
               >
-                <Button className="mt-4 w-full">View feed</Button>
+                <Button className="mt-4 w-full">View your feed</Button>
               </Link>
             </>
           ) : (
             <div className="flex justify-center">
-              <p className="bg-gray-50 rounded-md p-3 w-1/2 mb-4">
-                Once you&apos;ve picked your choices. You will be able to see
-                our curated pawsome photos especially for you. 🐾
+              <p className="bg-gray-50 rounded-md md:p-3 md:w-1/2 mb-2 md:mb-4">
+                Once you&apos;ve made your choice, you will see a list of
+                pawesome photos curated especially for you. 🐾
               </p>
             </div>
           )}
@@ -135,7 +135,7 @@ export default function BreedList({
       </div>
       <BreedSearchBar handleSearch={handleSearch} />
       {breedsList.length ? (
-        <ul className="flex flex-wrap justify-center gap-3">
+        <ul className="flex flex-wrap justify-center gap-1 md:gap-3">
           {breedsList.map(({ name, iconUrl }) => (
             <BreedIcon
               key={name}

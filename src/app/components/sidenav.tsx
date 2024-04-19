@@ -4,7 +4,10 @@ import { useEffect } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { useAuthContext } from "@/context/AuthContext";
-import { PowerIcon } from "@heroicons/react/24/outline";
+import {
+  ArrowRightStartOnRectangleIcon,
+  ArrowRightEndOnRectangleIcon,
+} from "@heroicons/react/24/outline";
 import NavLinks from "@/app/components/NavLinks";
 import signOut from "@/firebase/auth/signout";
 import { futura } from "@/app/ui/fonts";
@@ -56,8 +59,8 @@ export default function SideNav() {
   };
 
   useEffect(() => {
-    if (user == null) router.refresh();
-  }, [user]);
+    if (user === null) router.refresh();
+  }, []);
 
   return (
     <div className="flex h-full flex-col px-3 py-4 md:px-2">
@@ -67,17 +70,21 @@ export default function SideNav() {
       >
         <div className="w-32 text-white md:w-40 flex gap-2">
           <img src="/logo.svg" alt="Logo" className="w-10" />
-          <h1 className={futura.className}>Dogegram</h1>
+          <h1 className={futura.className}>Doggogram</h1>
         </div>
       </Link>
       <div className="flex grow flex-row justify-between space-x-2 md:flex-col md:space-x-0 md:space-y-2">
         <NavLinks />
         <div className="hidden h-auto w-full grow rounded-md bg-gray-50 md:block"></div>
         <button
-          className={`flex h-[48px] w-full grow items-center justify-center gap-2 rounded-md bg-gray-50 p-3 text-lg font-medium hover:bg-yellow-600 hover:text-white md:flex-none md:justify-start md:p-2 md:px-3 ${futura.className}`}
+          className={`flex h-[48px] md:w-full grow items-center justify-center gap-2 rounded-md bg-gray-50 p-3 text-lg font-medium hover:bg-yellow-600 hover:text-white md:flex-none md:justify-start md:p-2 md:px-3 ${futura.className}`}
           onClick={user ? handleLogout : handleLogin}
         >
-          <PowerIcon className="w-6" />
+          {user ? (
+            <ArrowRightStartOnRectangleIcon className="w-6" />
+          ) : (
+            <ArrowRightEndOnRectangleIcon className="w-6" />
+          )}
           <div className="hidden md:block">{user?.email || "Log in"}</div>
         </button>
       </div>
