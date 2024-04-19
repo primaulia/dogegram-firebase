@@ -19,7 +19,7 @@ export default function BreedIcon({
 }) {
   return (
     <li
-      className="relative w-[160px] md:w-1/6 md:min-w-[200px] h-[80px] md:h-[200px] max-h-[240px] flex justify-center items-center cursor-pointer rounded md:rounded-full bg-cover"
+      className="relative w-[160px] md:w-1/6 md:min-w-[160px] h-[80px] md:h-[160px] max-h-[240px] flex justify-center items-center cursor-pointer rounded md:rounded-full bg-cover"
       style={{ backgroundImage: `url(${image})` }}
       key={breed}
       onClick={() => handleClick(breed)}

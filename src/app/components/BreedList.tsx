@@ -125,7 +125,7 @@ export default function BreedList({
             </>
           ) : (
             <div className="flex justify-center">
-              <p className="bg-gray-50 rounded-md md:p-3 md:w-1/2 mb-2 md:mb-4">
+              <p className="bg-gray-50 rounded-md md:p-3 md:max-w-[600px] mb-2 md:mb-4">
                 Once you&apos;ve made your choice, you will see a list of
                 pawesome photos curated especially for you. 🐾
               </p>

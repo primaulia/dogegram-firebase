@@ -18,7 +18,7 @@ export default function RootLayout({
             <div className="w-full flex-none md:w-64">
               <SideBar />
             </div>
-            <div className="flex-grow p-6 md:overflow-y-auto md:p-12">
+            <div className="flex-grow p-6 md:overflow-y-auto md:px-1 md:py-12">
               {children}
             </div>
           </main>
