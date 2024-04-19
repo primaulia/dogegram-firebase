@@ -37,7 +37,7 @@ export default function BreedList({
           const breedName = doc.data().name;
           return {
             name: breedName,
-            iconUrl: breeds[breedName],
+            iconUrl: breeds.find((b) => b.name === breedName)!.iconUrl,
           };
         });
 
