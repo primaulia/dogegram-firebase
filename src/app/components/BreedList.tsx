@@ -97,7 +97,7 @@ export default function BreedList({
     <>
       <div className="flex justify-center">
         <div className="bg-gray-50 rounded-md p-3 w-3/4 mb-4">
-          <h2 className={`${futura.className} text-center mb-2`}>
+          <h2 className={`${futura.className} text-center my-2`}>
             {savedBreeds.length
               ? "Your selected doggo breeds"
               : "💖 Choose your top 3 doggo breeds 💖"}
@@ -134,7 +134,6 @@ export default function BreedList({
         </div>
       </div>
       <BreedSearchBar handleSearch={handleSearch} />
-
       {breedsList.length ? (
         <ul className="flex flex-wrap justify-center gap-3">
           {breedsList.map(({ name, iconUrl }) => (

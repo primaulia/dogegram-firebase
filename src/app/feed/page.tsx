@@ -1,20 +1,20 @@
 "use client";
 
+import { useEffect, useState } from "react";
+import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { shuffle } from "@/lib/utils";
+import { futura } from "@/app/ui/fonts";
+import { fetchRandomImagesByBreed } from "@/lib/data";
+import Button from "@/app/components/Button";
+import DoggoPhoto from "@/app/components/DoggoPhoto";
+import { useAuthContext } from "@/context/AuthContext";
 import { getBreedsByUserId } from "@/firebase/firestore/breeds";
 import {
   saveDoggoPhoto,
   getDoggoPhotosByUserId,
   deleteDoggoPhoto,
 } from "@/firebase/firestore/doggos";
-import { useAuthContext } from "@/context/AuthContext";
-import { useEffect, useState } from "react";
-import { fetchRandomImagesByBreed } from "@/lib/data";
-import { shuffle } from "@/lib/utils";
-import { useRouter } from "next/navigation";
-import DoggoPhoto from "@/app/components/DoggoPhoto";
-import { futura } from "@/app/ui/fonts";
-import Link from "next/link";
-import Button from "@/app/components/Button";
 
 export default function Page() {
   const user = useAuthContext();
@@ -65,7 +65,7 @@ export default function Page() {
     if (user) {
       fetchSavedBreeds();
     }
-  }, [user, router]);
+  }, [user]);
 
   const handleLike = async (photoUrl: string) => {
     if (savedPhotos.includes(photoUrl)) {
@@ -88,27 +88,27 @@ export default function Page() {
 
   return (
     <>
-      {!doggoPhotos.length && (
-        <div>
-          <h2 className={futura.className}>
-            You have not chosen any doggo breed yet. Choose one to view your
-            doggo feeds!
-          </h2>
-          <Link href="/">
-            <Button className="mt-4 w-full">Choose breed</Button>
-          </Link>
-        </div>
+      <h2 className={futura.className}>
+        {doggoPhotos.length
+          ? "Choose your favourite doggo by clicking the 💖 button."
+          : "⚠️ You have not chosen any doggo breed yet. Choose one to view your doggo feeds!"}
+      </h2>
+      {doggoPhotos.length ? (
+        <ul className="grid grid-cols-2 gap-3">
+          {doggoPhotos.map((photo) => (
+            <DoggoPhoto
+              key={photo}
+              photo={photo}
+              saved={savedPhotos.includes(photo)}
+              handleLike={handleLike}
+            />
+          ))}
+        </ul>
+      ) : (
+        <Link href="/">
+          <Button className="mt-4 w-full">Choose your favourite breed</Button>
+        </Link>
       )}
-      <ul className="grid grid-cols-2 gap-3">
-        {doggoPhotos.map((photo) => (
-          <DoggoPhoto
-            key={photo}
-            photo={photo}
-            saved={savedPhotos.includes(photo)}
-            handleLike={handleLike}
-          />
-        ))}
-      </ul>
     </>
   );
 }
