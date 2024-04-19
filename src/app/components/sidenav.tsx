@@ -65,7 +65,8 @@ export default function SideNav() {
         className="mb-2 flex h-20 items-end justify-start rounded-md bg-yellow-900 p-4 md:h-40"
         href="/"
       >
-        <div className="w-32 text-white md:w-40">
+        <div className="w-32 text-white md:w-40 flex gap-2">
+          <img src="/logo.svg" alt="Logo" className="w-10" />
           <h1 className={futura.className}>Dogegram</h1>
         </div>
       </Link>
