@@ -16,6 +16,12 @@
   }
 }
 
+
+
+body {
+  color: rgb(96, 96, 96);
+}
+
 h1 {
   font-size: 1.5rem;
 }
@@ -28,7 +34,8 @@ h3 {
   font-size: 1.25rem;
 }
 
-h4 {
+h4,
+body {
   font-size: 1rem;
 }
 

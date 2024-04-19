@@ -24,7 +24,7 @@ function ButtonLink({ flow }: { flow: string }) {
 
   return (
     <Link href={`/${path}`}>
-      <Button className="mt-2 w-full bg-white border-solid border-2 border-yellow-600 text-yellow-600 hover:bg-yellow-100 active:bg-yellow-300">
+      <Button className="mt-2 w-full !bg-white border-solid border-2 border-yellow-600 text-yellow-600 hover:!bg-yellow-100 active:!bg-yellow-300">
         {label}
       </Button>
     </Link>
