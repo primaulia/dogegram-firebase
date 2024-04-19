@@ -1,9 +1,9 @@
 "use client";
 
 import BreedIcon from "@/app/components/BreedIcon";
+import BreedSearchBar from "@/app/components/BreedSearchBar";
 import { useEffect, useState } from "react";
 import { deleteBreed, getBreedsByUserId } from "@/firebase/firestore/breeds";
-import { MagnifyingGlassIcon } from "@heroicons/react/24/outline";
 import { useAuthContext } from "@/context/AuthContext";
 import { useRouter } from "next/navigation";
 import { saveBreed } from "@/firebase/firestore/breeds";
@@ -23,6 +23,8 @@ export default function BreedList({
   breeds: { name: string; iconUrl: string }[];
 }) {
   const user = useAuthContext();
+  const router = useRouter();
+
   const [savedBreeds, setSavedBreeds] = useState<
     { name: string; iconUrl: string }[]
   >([]);
@@ -52,7 +54,6 @@ export default function BreedList({
     }
   }, [user]);
 
-  const router = useRouter();
   const handleIconClick = async (breedName: string) => {
     if (!user) {
       console.error("User hasn't logged in yet");
@@ -136,17 +137,7 @@ export default function BreedList({
           )}
         </div>
       </div>
-      <div className="relative my-2">
-        <input
-          className="peer block w-full rounded-md border border-gray-200 py-[9px] pl-10 text-sm outline-2 placeholder:text-gray-500"
-          id="search"
-          type="text"
-          name="search"
-          placeholder="Search your breeds here"
-          onChange={(e) => handleSearch(e.target.value)}
-        />
-        <MagnifyingGlassIcon className="pointer-events-none absolute left-3 top-1/2 h-[18px] w-[18px] -translate-y-1/2 text-gray-500 peer-focus:text-gray-900" />
-      </div>
+      <BreedSearchBar handleSearch={handleSearch} />
       <ul className="grid grid-cols-6 gap-4">
         {breedsList.map(({ name, iconUrl }) => (
           <BreedIcon
