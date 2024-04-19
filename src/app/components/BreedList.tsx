@@ -136,7 +136,7 @@ export default function BreedList({
       <BreedSearchBar handleSearch={handleSearch} />
 
       {breedsList.length ? (
-        <ul className="grid grid-cols-6 gap-4">
+        <ul className="flex flex-wrap justify-center gap-3">
           {breedsList.map(({ name, iconUrl }) => (
             <BreedIcon
               key={name}
