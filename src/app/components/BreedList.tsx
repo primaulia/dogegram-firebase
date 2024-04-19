@@ -1,21 +1,17 @@
 "use client";
 
+import { useDebouncedCallback } from "use-debounce";
+import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
+import Link from "next/link";
+import { useAuthContext } from "@/context/AuthContext";
 import BreedIcon from "@/app/components/BreedIcon";
 import BreedSearchBar from "@/app/components/BreedSearchBar";
-import { useEffect, useState } from "react";
-import { deleteBreed, getBreedsByUserId } from "@/firebase/firestore/breeds";
-import { useAuthContext } from "@/context/AuthContext";
-import { useRouter } from "next/navigation";
-import { saveBreed } from "@/firebase/firestore/breeds";
-import Link from "next/link";
-import { futura } from "@/app/ui/fonts";
 import Button from "@/app/components/Button";
-import { useDebouncedCallback } from "use-debounce";
-
-function hasKeyword(longString: string, keyword: string) {
-  const regex = new RegExp(keyword, "i"); // Case-insensitive search
-  return regex.test(longString);
-}
+import { deleteBreed, getBreedsByUserId } from "@/firebase/firestore/breeds";
+import { saveBreed } from "@/firebase/firestore/breeds";
+import { futura } from "@/app/ui/fonts";
+import { hasKeyword } from "@/lib/utils";
 
 export default function BreedList({
   breeds,
@@ -138,20 +134,27 @@ export default function BreedList({
         </div>
       </div>
       <BreedSearchBar handleSearch={handleSearch} />
-      <ul className="grid grid-cols-6 gap-4">
-        {breedsList.map(({ name, iconUrl }) => (
-          <BreedIcon
-            key={name}
-            breed={name}
-            image={iconUrl}
-            selected={savedBreeds.some(
-              (savedBreed) => savedBreed.name === name
-            )}
-            blurred={true}
-            handleClick={handleIconClick}
-          />
-        ))}
-      </ul>
+
+      {breedsList.length ? (
+        <ul className="grid grid-cols-6 gap-4">
+          {breedsList.map(({ name, iconUrl }) => (
+            <BreedIcon
+              key={name}
+              breed={name}
+              image={iconUrl}
+              selected={savedBreeds.some(
+                (savedBreed) => savedBreed.name === name
+              )}
+              blurred={true}
+              handleClick={handleIconClick}
+            />
+          ))}
+        </ul>
+      ) : (
+        <h2 className={`${futura.className} my-6 text-center`}>
+          No breed found with that keyword. Please try again 🙏.
+        </h2>
+      )}
     </>
   );
 }

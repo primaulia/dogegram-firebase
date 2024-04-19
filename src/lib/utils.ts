@@ -1,3 +1,4 @@
+// Fetcher
 export async function httpGet<T>(request: RequestInfo): Promise<T> {
   const response = await fetch(request);
   const body = await response.json();
@@ -5,7 +6,6 @@ export async function httpGet<T>(request: RequestInfo): Promise<T> {
 }
 
 // RGB blur color functions
-
 const keyStr =
   "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=";
 
@@ -21,7 +21,6 @@ export const rgbDataURL = (r: number, g: number, b: number) =>
   }/yH5BAAAAAAALAAAAAABAAEAAAICRAEAOw==`;
 
 // Array shuffler
-
 export const shuffle = (array: any[]) => {
   let currentIndex = array.length;
   let randomIndex;
@@ -40,4 +39,10 @@ export const shuffle = (array: any[]) => {
   }
 
   return array;
+};
+
+// Regex pattern checker
+export const hasKeyword = (longString: string, keyword: string) => {
+  const regex = new RegExp(keyword, "i"); // Case-insensitive search
+  return regex.test(longString);
 };
