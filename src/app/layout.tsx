@@ -3,7 +3,7 @@
 import { work } from "@/app/ui/fonts";
 import "@/app/ui/globals.css";
 import { AuthContextProvider } from "@/context/AuthContext";
-import SideNav from "@/app/components/SideNav";
+import SideBar from "@/app/components/SideBar";
 
 export default function RootLayout({
   children,
@@ -16,7 +16,7 @@ export default function RootLayout({
         <AuthContextProvider>
           <main className="flex h-screen flex-col md:flex-row md:overflow-hidden">
             <div className="w-full flex-none md:w-64">
-              <SideNav />
+              <SideBar />
             </div>
             <div className="flex-grow p-6 md:overflow-y-auto md:p-12">
               {children}

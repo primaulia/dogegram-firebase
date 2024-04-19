@@ -43,7 +43,7 @@ import { futura } from "@/app/ui/fonts";
 //   return user;
 // }
 
-export default function SideNav() {
+export default function SideBar() {
   const user = useAuthContext();
   const router = useRouter();
 
