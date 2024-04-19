@@ -32,10 +32,10 @@ export default function BreedList({
       try {
         const { result: snapshots } = await getBreedsByUserId(user!.uid);
         const savedBreedsData = snapshots!.map((doc) => {
-          const breedName = doc.data().name;
+          const { name, iconUrl } = doc.data();
           return {
-            name: breedName,
-            iconUrl: breeds.find((b) => b.name === breedName)!.iconUrl,
+            name,
+            iconUrl,
           };
         });
 
@@ -70,6 +70,7 @@ export default function BreedList({
 
     const { error } = await saveBreed({
       name: breedName,
+      iconUrl: breeds.find((b) => b.name === breedName)!.iconUrl,
       user_id: user!.uid,
     });
 
