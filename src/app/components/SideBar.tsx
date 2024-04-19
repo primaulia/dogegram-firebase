@@ -12,37 +12,6 @@ import NavLinks from "@/app/components/NavLinks";
 import signOut from "@/firebase/auth/signout";
 import { futura } from "@/app/ui/fonts";
 
-// import { onAuthStateChanged } from "@/src/lib/firebase/auth.js";
-
-// function useUserSession(initialUser) {
-//   // The initialUser comes from the server via a server component
-//   const [user, setUser] = useState(initialUser);
-//   const router = useRouter();
-
-//   useEffect(() => {
-//     const unsubscribe = onAuthStateChanged((authUser) => {
-//       setUser(authUser);
-//     });
-
-//     return () => unsubscribe();
-//     // eslint-disable-next-line react-hooks/exhaustive-deps
-//   }, []);
-
-//   useEffect(() => {
-//     onAuthStateChanged((authUser) => {
-//       if (user === undefined) return;
-
-//       // refresh when user changed to ease testing
-//       if (user?.email !== authUser?.email) {
-//         router.refresh();
-//       }
-//     });
-//     // eslint-disable-next-line react-hooks/exhaustive-deps
-//   }, [user]);
-
-//   return user;
-// }
-
 export default function SideBar() {
   const user = useAuthContext();
   const router = useRouter();
@@ -57,10 +26,6 @@ export default function SideBar() {
     event.preventDefault();
     router.push("/login");
   };
-
-  useEffect(() => {
-    if (user === null) router.refresh();
-  }, []);
 
   return (
     <div className="flex h-full flex-col px-3 py-4 md:px-2">
