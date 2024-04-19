@@ -65,7 +65,7 @@ export default function Page() {
     if (user) {
       fetchSavedBreeds();
     }
-  }, [user]);
+  }, []);
 
   const handleLike = async (photoUrl: string) => {
     if (savedPhotos.includes(photoUrl)) {
@@ -94,7 +94,7 @@ export default function Page() {
           : "⚠️ You have not chosen any doggo breed yet. Choose one to view your doggo feeds!"}
       </h2>
       {doggoPhotos.length ? (
-        <ul className="grid grid-cols-2 gap-3">
+        <ul className="grid grid-cols-1 md:grid-cols-2 gap-3">
           {doggoPhotos.map((photo) => (
             <DoggoPhoto
               key={photo}

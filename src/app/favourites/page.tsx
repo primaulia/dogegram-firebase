@@ -37,7 +37,7 @@ export default function Page() {
     if (user) {
       fetchDoggoPhotos();
     }
-  }, [user]);
+  }, []);
 
   const handleLike = async (photoUrl: string) => {
     if (savedPhotos.includes(photoUrl)) {
@@ -51,12 +51,11 @@ export default function Page() {
     <>
       <div>
         <h2 className={futura.className}>
-          {savedPhotos.length
-            ? "Here are your favourite doggos! 🐶"
-            : "You have not liked any doggos yet. Why? Much wow!"}
+          {!savedPhotos.length &&
+            "You have not liked any doggos yet. Why? Much wow!"}
         </h2>
         {savedPhotos.length ? (
-          <ul className="grid grid-cols-2 gap-3">
+          <ul className="grid grid-cols-1 md:grid-cols-2 gap-3">
             {savedPhotos.map((photo: string) => (
               <DoggoPhoto
                 key={photo}
