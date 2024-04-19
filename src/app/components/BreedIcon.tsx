@@ -36,7 +36,7 @@ export default function BreedIcon({
       </h3>
       {selected && (
         <div>
-          <XCircleIcon className="absolute top-2 right-1 h-[40px] w-[40px] -translate-y-1/2 text-yellow-600" />
+          <XCircleIcon className="absolute top-3 right-2 h-[40px] w-[40px] -translate-y-1/2 text-yellow-600 drop-shadow-[0_1.2px_1.2px_rgba(234, 179, 8,0.8)]" />
         </div>
       )}
     </li>

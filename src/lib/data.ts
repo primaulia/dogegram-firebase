@@ -38,11 +38,14 @@ export async function fetchRandomImagesByBreed(
 
 export async function fetchHomePage() {
   const rawAllBreeds = await fetchBreeds();
-  const homepageResponse: Record<string, string> = {};
+  const homepageResponse: { name: string; iconUrl: string }[] = [];
 
   for (const breed in rawAllBreeds) {
     const imageUrl = await fetchRandomImageByBreed(breed); // Call function to get image
-    homepageResponse[breed] = imageUrl;
+    homepageResponse.push({
+      name: breed,
+      iconUrl: imageUrl,
+    });
   }
 
   return homepageResponse;
