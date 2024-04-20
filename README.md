@@ -25,14 +25,14 @@ View the deployed app at https://dogegram-ad8a9.web.app/
 
 Beyond the core functionality, Doggogram boasts several user-friendly features:
 
-- **Simple breeds management**: Undo breed selections to explore more dog photos. 
+- **Simple breeds management**: Undo breed selections to explore more dog photos.
+  ![Apr-20-2024 23-59-39](https://github.com/primaulia/dogegram-firebase/assets/1294303/8f30c3e0-ff75-4bcc-b12f-45033caaa0e9)
   
 - **Search breeds feature**: Easily find specific breeds using a keyword search  
-  ![Screenshot 2024-04-20 at 6 00 06 PM](https://github.com/primaulia/dogegram-firebase/assets/1294303/4eccb8ea-3f5c-477e-9fe1-d3c57b776cad)
+  ![Apr-20-2024 23-56-51](https://github.com/primaulia/dogegram-firebase/assets/1294303/a927889c-5517-4d13-8481-90e05d27519c)
 
 - **`My Favorite Doggos` Page**: Track and manage your favorited dog photos.
   
-  ![Screenshot 2024-04-20 at 6 01 25 PM](https://github.com/primaulia/dogegram-firebase/assets/1294303/a5e201f5-cad9-4fc2-bbd2-f4073e557ce5)
 
 #### Future Enhancements:
 - `Surprise me` feature: Explore random dog breeds for unexpected discoveries
