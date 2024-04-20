@@ -113,7 +113,7 @@ export default function BreedList({ breeds }: { breeds: TBreed[] }) {
               <ul className="flex justify-start md:justify-center flex-wrap gap-1 md:gap-2">
                 {savedBreeds.map((breed) => (
                   <BreedIcon
-                    key={breed.id}
+                    key={breed.name}
                     breed={breed}
                     selected={true}
                     blurred={false}

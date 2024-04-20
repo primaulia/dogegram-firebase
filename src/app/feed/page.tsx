@@ -5,7 +5,10 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { shuffle } from "@/lib/utils";
 import { futura } from "@/app/ui/fonts";
-import { fetchRandomImagesByBreed } from "@/lib/data";
+import {
+  fetchRandomImagesByBreed,
+  fetchRandomImagesBySubBreed,
+} from "@/lib/data";
 import Button from "@/app/components/Button";
 import DoggoPhoto from "@/app/components/DoggoPhoto";
 import { useAuthContext } from "@/context/AuthContext";
@@ -28,7 +31,11 @@ export default function Page() {
       try {
         const { result: breedsSnapshots } = await getBreedsByUserId(user!.uid);
         const savedBreedsData = breedsSnapshots!.map((doc) => {
-          return doc.data().name;
+          return {
+            name: doc.data().name,
+            type: doc.data().type,
+            parent: doc.data().parent,
+          };
         });
 
         const { result: doggoPhotoSnapshots } = await getDoggoPhotosByUserId(
@@ -42,8 +49,12 @@ export default function Page() {
         let photoUrls: string[] = [];
 
         await Promise.all(
-          savedBreedsData.map(async (breed) => {
-            const fetchedPhotos = await fetchRandomImagesByBreed(breed);
+          savedBreedsData.map(async ({ name, type, parent }) => {
+            const fetchedPhotos =
+              type === "base"
+                ? await fetchRandomImagesByBreed(name)
+                : await fetchRandomImagesBySubBreed(parent, name);
+
             photoUrls = [...photoUrls, ...fetchedPhotos];
           })
         );

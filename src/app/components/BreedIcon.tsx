@@ -32,7 +32,7 @@ export default function BreedIcon({
         })}
       ></div>
       <h3
-        className={`${futura.className} text-white drop-shadow-[0_1.2px_1.2px_rgba(0,0,0,0.8)]`}
+        className={`${futura.className} text-white text-center drop-shadow-[0_1.2px_1.2px_rgba(0,0,0,0.8)]`}
       >
         {breedName}
       </h3>
