@@ -26,7 +26,11 @@ export default function Page() {
       const savedPhotosData = doggoPhotoSnapshots!.map((doc) => {
         return doc.data().url;
       });
-      setSavedPhotos((prevPhotos) => [...prevPhotos, ...savedPhotosData]);
+      setSavedPhotos(savedPhotosData);
+
+      return () => {
+        setSavedPhotos([]);
+      };
     };
 
     if (user) {

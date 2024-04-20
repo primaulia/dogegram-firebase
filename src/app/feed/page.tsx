@@ -24,7 +24,7 @@ export default function Page() {
   const [savedPhotos, setSavedPhotos] = useState<string[]>([]);
 
   useEffect(() => {
-    const fetchSavedBreeds = async () => {
+    const fetchPhotosByBreeds = async () => {
       try {
         const { result: breedsSnapshots } = await getBreedsByUserId(user!.uid);
         const savedBreedsData = breedsSnapshots!.map((doc) => {
@@ -43,22 +43,24 @@ export default function Page() {
 
         await Promise.all(
           savedBreedsData.map(async (breed) => {
-            photoUrls = [
-              ...photoUrls,
-              ...(await fetchRandomImagesByBreed(breed)),
-            ];
+            const fetchedPhotos = await fetchRandomImagesByBreed(breed);
+            photoUrls = [...photoUrls, ...fetchedPhotos];
           })
         );
 
-        photoUrls = shuffle(photoUrls);
-        setDoggoPhotos(photoUrls);
+        setDoggoPhotos(shuffle(photoUrls));
       } catch (error) {
         console.error("Error fetching saved breeds photos:", error);
       }
+
+      return () => {
+        setSavedPhotos([]);
+        setDoggoPhotos([]);
+      };
     };
 
     if (user) {
-      fetchSavedBreeds();
+      fetchPhotosByBreeds();
     } else {
       router.push("/login");
     }
