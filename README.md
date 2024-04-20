@@ -14,45 +14,70 @@ This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next
   - Run the app -> `yarn dev`
   - It should run at a specific port in your localhost. Most of the time it'll be `localhost:3000`
  
-### Additional features
+### Additional developed features
 
-On top of the features listed in the challenge documentation, I'm taking creative approach to add additional features that I find relevant to use the app better.
+On top of the features listed in the challenge documentation, I'm taking a creative approach to add additional features that I find relevant to use the app better.
 
-- Search breeds features
+- Simple breeds management feature
+
+  TODO screenshots
+
+  This feature will allow users to undo their choices once they've picked their chosen breed. This will allow them to explore other dog photos.
+  
+- Search breeds feature
   
   ![Screenshot 2024-04-20 at 6 00 06 PM](https://github.com/primaulia/dogegram-firebase/assets/1294303/4eccb8ea-3f5c-477e-9fe1-d3c57b776cad)
 
   Type any keyword relevant to any of your breed names. It should filter the breed list.
 
-- `My favourite doggos` page
+- `My favorite doggos` page
   
   ![Screenshot 2024-04-20 at 6 01 25 PM](https://github.com/primaulia/dogegram-firebase/assets/1294303/a5e201f5-cad9-4fc2-bbd2-f4073e557ce5)
 
-  After liking the photos on your [feed page](https://dogegram-ad8a9.web.app/feed). The liked photos will be collected on this page
+  After liking the photos on your [feed page](https://dogegram-ad8a9.web.app/feed). The liked photos will be collected on this page. Users will also be able to remove their favorite photos on this page.
 
-#### Future feature
+#### Future features and improvements
 - `Surprise me` feature
   
-  This is beyond the requirement, but once I've submitted this repo, I will try to implement a feature to add random breeds to the breeds list to allow new users explore the site better.
+  I will implement a feature that will allow users to add random breeds. This will let users explore more photos from breeds they're not familiar with.
+
+- Refactor the `SavedBreeds` state
+
+  Reduce the API call to the Firestore by sharing the `SavedBreeds` state through React's context.
+
+- Partial pre-rendering of the breed state
+
+  Currently, all data from the API are displayed at render. I could improve this by only loading a few and suspending the rendering once it's needed using the built-in `Next.js` pre-render mechanism.
+
+- Firestore optimization
+  Indexing the Firestore data to improve the data fetching duration.
+
+- Data sanitization and decoupling from React's project
+
+  Read more below.
 
 ## Firestore structure
 
-I'm keeping the structure of the firestorm simple with 2 collections that's all tied to the user authenticated to the app. The reasoning for this decisions are:
+![Screenshot 2024-04-20 at 10 58 18 PM](https://github.com/primaulia/dogegram-firebase/assets/1294303/1a1a1919-f8a8-4b0e-9623-46cf11caf1f3)
+
+I'm keeping the structure of the firestorm simple with 2 collections that are all tied to the user authenticated to the app (1 User -> many breeds, 1 User -> many photos). The reasons for this decision are:
 
 - Future-proofing the data structure should we need to query the `breeds` and `doggos` (photos) data further
 - Allowing users to switch breeds and keeping the old photos that they've liked
+- Minimize the amount of data read and transferred from the Firestore, this will significantly reduce the cost of the Firestore usage.
 
-### Diagram (TODO)
-
-### Raw Data Screenshots
+### Raw Data & Rules Screenshots
 ![Screenshot 2024-04-20 at 6 05 42 PM](https://github.com/primaulia/dogegram-firebase/assets/1294303/6d9689b7-6bed-4545-9dc8-2e0258b72c97)
 ![Screenshot 2024-04-20 at 6 05 48 PM](https://github.com/primaulia/dogegram-firebase/assets/1294303/e0babf23-b76c-4b40-b5a8-d880768bb257)
+![Screenshot 2024-04-20 at 11 03 18 PM](https://github.com/primaulia/dogegram-firebase/assets/1294303/22ce530a-9dfc-4186-b569-a9e4ed12a2d5)
 
 ## Refactoring
 
 > Provide a written explanation of how you would refactor the solution to include a Node.js Firebase function that connects to the dog.ceo https://dog.ceo/api/breeds/list/all API endpoint and fattens the data into a single array of strings.
 
-TODO
+### Known problem
+
+- Breeds and Sub-breeds data are not clean. At the moment, we have manually sanitize the data on the fly on every request at home page
 
 ## Unit test specs
 
