@@ -55,22 +55,19 @@ export default function Page() {
           {!savedPhotos.length &&
             "You have not liked any doggos yet. Why? Much wow!"}
         </h2>
-        {savedPhotos.length ? (
-          <ul className="grid grid-cols-1 md:grid-cols-2 gap-3">
-            {savedPhotos.map((photo: string) => (
-              <DoggoPhoto
-                key={photo}
-                photo={photo}
-                saved={true}
-                handleLike={handleLike}
-              />
-            ))}
-          </ul>
-        ) : (
-          <Link href="/feed">
-            <Button className="mt-4 w-full">View feed</Button>
-          </Link>
-        )}
+        <Link href="/feed">
+          <Button className="mt-4 w-full">View your feed</Button>
+        </Link>
+        <ul className="grid grid-cols-1 md:grid-cols-2 gap-3">
+          {savedPhotos.map((photo: string) => (
+            <DoggoPhoto
+              key={photo}
+              photo={photo}
+              saved={true}
+              handleLike={handleLike}
+            />
+          ))}
+        </ul>
       </div>
     </>
   );

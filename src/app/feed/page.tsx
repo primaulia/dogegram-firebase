@@ -88,26 +88,21 @@ export default function Page() {
   return (
     <>
       <h2 className={futura.className}>
-        {doggoPhotos.length
-          ? "Choose your favourite doggo by clicking the 💖 button."
-          : "⚠️ You have not chosen any doggo breed yet. Choose one to view your doggo feeds!"}
+        Choose your favourite doggo by clicking the 💖 button.
       </h2>
-      {doggoPhotos.length ? (
-        <ul className="grid grid-cols-1 md:grid-cols-2 gap-3">
-          {doggoPhotos.map((photo) => (
-            <DoggoPhoto
-              key={photo}
-              photo={photo}
-              saved={savedPhotos.includes(photo)}
-              handleLike={handleLike}
-            />
-          ))}
-        </ul>
-      ) : (
-        <Link href="/">
-          <Button className="mt-4 w-full">Choose your favourite breed</Button>
-        </Link>
-      )}
+      <Link href="/">
+        <Button className="mt-4 w-full">Change your favourite breeds</Button>
+      </Link>
+      <ul className="grid grid-cols-1 md:grid-cols-2 gap-3">
+        {doggoPhotos.map((photo) => (
+          <DoggoPhoto
+            key={photo}
+            photo={photo}
+            saved={savedPhotos.includes(photo)}
+            handleLike={handleLike}
+          />
+        ))}
+      </ul>
     </>
   );
 }
