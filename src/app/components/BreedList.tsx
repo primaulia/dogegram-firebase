@@ -12,32 +12,27 @@ import { deleteBreed, getBreedsByUserId } from "@/firebase/firestore/breeds";
 import { saveBreed } from "@/firebase/firestore/breeds";
 import { futura } from "@/app/ui/fonts";
 import { hasKeyword } from "@/lib/utils";
+import { TBreed } from "@/lib/definitions";
+import { BreedStore } from "@/firebase/firestore/definitions";
 
-export default function BreedList({
-  breeds,
-}: {
-  breeds: { id: string; name: string; iconUrl: string; type: "base" | "sub" }[];
-}) {
+export default function BreedList({ breeds }: { breeds: TBreed[] }) {
   const { user } = useAuthContext();
   const router = useRouter();
 
-  const [savedBreeds, setSavedBreeds] = useState<
-    { name: string; iconUrl: string; type: "base" | "sub" }[]
-  >([]);
-  const [breedsList, setBreedsList] =
-    useState<
-      { id: string; name: string; iconUrl: string; type: "base" | "sub" }[]
-    >(breeds);
+  const [savedBreeds, setSavedBreeds] = useState<TBreed[]>([]);
+  const [breedsList, setBreedsList] = useState<TBreed[]>(breeds);
 
   useEffect(() => {
     const fetchSavedBreeds = async () => {
       try {
         const { result: snapshots } = await getBreedsByUserId(user!.uid);
-        const savedBreedsData = snapshots!.map((doc) => {
-          const { name, iconUrl } = doc.data();
+        const savedBreedsData: TBreed[] = snapshots!.map((doc) => {
+          const { name, iconUrl, type } = doc.data();
+
           return {
             name,
             iconUrl,
+            type,
           };
         });
 
@@ -52,16 +47,16 @@ export default function BreedList({
     }
   }, [user]);
 
-  const handleIconClick = async (breedName: string) => {
+  const handleIconClick = async (breed: TBreed) => {
     if (!user) {
       console.error("User hasn't logged in yet");
       router.push("/login");
       return;
     }
 
-    if (savedBreeds.some((b) => b.name === breedName)) {
-      await deleteBreed(breedName, user.uid);
-      setSavedBreeds(savedBreeds.filter((b) => b.name !== breedName));
+    if (savedBreeds.some((b) => b.name === breed.name)) {
+      await deleteBreed(breed.name, user.uid);
+      setSavedBreeds(savedBreeds.filter((b) => b.name !== breed.name));
       return;
     }
 
@@ -70,20 +65,26 @@ export default function BreedList({
       return false;
     }
 
-    const { error } = await saveBreed({
-      name: breedName,
-      iconUrl: breeds.find((b) => b.name === breedName)!.iconUrl,
-      type: breeds.find((b) => b.name === breedName)!.type,
+    const savedBreedData: BreedStore = {
+      name: breed.name,
+      iconUrl: breed.iconUrl,
+      type: breed.type,
       user_id: user!.uid,
-    });
+    };
+
+    if (breed.type === "sub") {
+      savedBreedData.parent = breeds.find((b) => b.name === breed.name)!.parent;
+    }
+
+    const { error } = await saveBreed(savedBreedData);
 
     if (!error) {
       setSavedBreeds([
         ...savedBreeds,
         {
-          name: breedName,
-          iconUrl: breeds.find((b) => b.name === breedName)!.iconUrl,
-          type: breeds.find((b) => b.name === breedName)!.type,
+          name: breed.name,
+          iconUrl: breed.iconUrl,
+          type: breed.type,
         },
       ]);
     } else {
@@ -110,11 +111,10 @@ export default function BreedList({
           {savedBreeds.length ? (
             <>
               <ul className="flex justify-start md:justify-center flex-wrap gap-1 md:gap-2">
-                {savedBreeds.map(({ name, iconUrl }) => (
+                {savedBreeds.map((breed) => (
                   <BreedIcon
-                    key={name}
-                    breed={name}
-                    image={iconUrl}
+                    key={breed.id}
+                    breed={breed}
                     selected={true}
                     blurred={false}
                     handleClick={handleIconClick}
@@ -141,13 +141,12 @@ export default function BreedList({
       <BreedSearchBar handleSearch={handleSearch} />
       {breedsList.length ? (
         <ul className="flex flex-wrap justify-center gap-1 md:gap-3">
-          {breedsList.map(({ id, name, iconUrl }) => (
+          {breedsList.map((breed) => (
             <BreedIcon
-              key={id}
-              breed={name}
-              image={iconUrl}
+              key={breed.id}
+              breed={breed}
               selected={savedBreeds.some(
-                (savedBreed) => savedBreed.name === name
+                (savedBreed) => savedBreed.name === breed.name
               )}
               blurred={true}
               handleClick={handleIconClick}

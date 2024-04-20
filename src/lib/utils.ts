@@ -43,6 +43,6 @@ export const shuffle = (array: any[]) => {
 
 // Regex pattern checker
 export const hasKeyword = (longString: string, keyword: string) => {
-  const regex = new RegExp(`^${keyword}`, "i"); // Case-insensitive search
+  const regex = new RegExp(keyword, "i"); // Case-insensitive search
   return regex.test(longString);
 };

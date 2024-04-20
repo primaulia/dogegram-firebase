@@ -38,9 +38,25 @@ async function fetchRandomImageBySubBreed(
   }
 }
 
-async function fetchRandomImagesByBreed(breed: string): Promise<string[]> {
+export async function fetchRandomImagesByBreed(
+  breed: string
+): Promise<string[]> {
   try {
     const url = `https://dog.ceo/api/breed/${breed}/images`;
+    const { message } = await httpGet<ImagesResponse>(url);
+    return message;
+  } catch (error) {
+    console.error("Fetch Error:", error);
+    throw new Error("Failed to fetch image data.");
+  }
+}
+
+export async function fetchRandomImagesBySubBreed(
+  breed: string,
+  subBreed: string
+): Promise<string[]> {
+  try {
+    const url = `https://dog.ceo/api/breed/${breed}/${subBreed}/images`;
     const { message } = await httpGet<ImagesResponse>(url);
     return message;
   } catch (error) {
@@ -57,6 +73,7 @@ export async function fetchHomePage() {
     name: string;
     iconUrl: string;
     type: "base" | "sub";
+    parent?: string;
   }[] = [];
 
   for (const breed in allParentBreeds) {
@@ -80,6 +97,7 @@ export async function fetchHomePage() {
           name: subBreed,
           iconUrl: subBreedImageUrl,
           type: "sub",
+          parent: breed,
         });
       }
     }

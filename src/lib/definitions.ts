@@ -14,3 +14,11 @@ export type ImagesResponse = {
   message: string[];
   status: string;
 };
+
+export type TBreed = {
+  id?: string;
+  name: string;
+  iconUrl: string;
+  type: "base" | "sub";
+  parent?: string;
+};

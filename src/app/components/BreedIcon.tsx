@@ -3,25 +3,26 @@
 import { futura } from "@/app/ui/fonts";
 import clsx from "clsx";
 import { XCircleIcon, TrashIcon } from "@heroicons/react/24/solid";
+import { TBreed } from "@/lib/definitions";
 
 export default function BreedIcon({
-  image,
   breed,
   selected,
   blurred,
   handleClick,
 }: {
-  image: string;
-  breed: string;
+  breed: TBreed;
   selected: boolean;
   blurred: boolean;
-  handleClick: (breed: string) => void;
+  handleClick: (breed: TBreed) => void;
 }) {
+  const { iconUrl: image, name, parent } = breed;
+  const breedName = parent ? `${name} ${parent}` : name;
+
   return (
     <li
       className="relative w-[160px] md:w-1/6 md:min-w-[160px] h-[80px] md:h-[160px] max-h-[240px] flex justify-center items-center cursor-pointer rounded md:rounded-full bg-cover"
       style={{ backgroundImage: `url(${image})` }}
-      key={breed}
       onClick={() => handleClick(breed)}
     >
       <div
@@ -33,7 +34,7 @@ export default function BreedIcon({
       <h3
         className={`${futura.className} text-white drop-shadow-[0_1.2px_1.2px_rgba(0,0,0,0.8)]`}
       >
-        {breed}
+        {breedName}
       </h3>
       {selected && (
         <div>
