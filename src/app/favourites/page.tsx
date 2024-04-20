@@ -13,7 +13,7 @@ import DoggoPhoto from "@/app/components/DoggoPhoto";
 import Button from "@/app/components/Button";
 
 export default function Page() {
-  const user = useAuthContext();
+  const { user } = useAuthContext();
   const router = useRouter();
 
   const [savedPhotos, setSavedPhotos] = useState<string[]>([]);

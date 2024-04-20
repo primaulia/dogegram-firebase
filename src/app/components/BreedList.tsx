@@ -18,7 +18,7 @@ export default function BreedList({
 }: {
   breeds: { name: string; iconUrl: string }[];
 }) {
-  const user = useAuthContext();
+  const { user } = useAuthContext();
   const router = useRouter();
 
   const [savedBreeds, setSavedBreeds] = useState<

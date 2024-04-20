@@ -5,7 +5,7 @@ import firebase_app from "@/firebase/config";
 
 const auth = getAuth(firebase_app);
 
-export const AuthContext = createContext<User | null>(null);
+export const AuthContext = createContext<{ user?: User }>({});
 
 export const useAuthContext = () => useContext(AuthContext);
 
@@ -31,8 +31,8 @@ export const AuthContextProvider = ({
   }, []);
 
   return (
-    <AuthContext.Provider value={user}>
-      {loading ? null : children}
+    <AuthContext.Provider value={{ user }}>
+      {loading ? <div>Loading...</div> : children}
     </AuthContext.Provider>
   );
 };

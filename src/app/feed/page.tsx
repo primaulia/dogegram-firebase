@@ -17,7 +17,7 @@ import {
 } from "@/firebase/firestore/doggos";
 
 export default function Page() {
-  const user = useAuthContext();
+  const { user } = useAuthContext();
   const router = useRouter();
 
   const [doggoPhotos, setDoggoPhotos] = useState<string[]>([]);

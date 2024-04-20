@@ -1,6 +1,5 @@
 "use client";
 
-import { useEffect } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { useAuthContext } from "@/context/AuthContext";
@@ -13,7 +12,7 @@ import signOut from "@/firebase/auth/signout";
 import { futura } from "@/app/ui/fonts";
 
 export default function SideBar() {
-  const user = useAuthContext();
+  const { user } = useAuthContext();
   const router = useRouter();
 
   const handleLogout = (event: { preventDefault: () => void }) => {
