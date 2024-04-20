@@ -48,7 +48,7 @@ export default function BreedList({
     if (user) {
       fetchSavedBreeds();
     }
-  }, []);
+  }, [user]);
 
   const handleIconClick = async (breedName: string) => {
     if (!user) {

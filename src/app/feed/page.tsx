@@ -24,11 +24,6 @@ export default function Page() {
   const [savedPhotos, setSavedPhotos] = useState<string[]>([]);
 
   useEffect(() => {
-    if (!user) {
-      router.push("/login");
-      return;
-    }
-
     const fetchSavedBreeds = async () => {
       try {
         const { result: breedsSnapshots } = await getBreedsByUserId(user!.uid);
@@ -42,7 +37,7 @@ export default function Page() {
         const savedPhotosData = doggoPhotoSnapshots!.map((doc) => {
           return doc.data().url;
         });
-        setSavedPhotos([...savedPhotos, ...savedPhotosData]);
+        setSavedPhotos((prevPhotos) => [...prevPhotos, ...savedPhotosData]);
 
         let photoUrls: string[] = [];
 
@@ -64,8 +59,10 @@ export default function Page() {
 
     if (user) {
       fetchSavedBreeds();
+    } else {
+      router.push("/login");
     }
-  }, []);
+  }, [user, router]);
 
   const handleLike = async (photoUrl: string) => {
     if (savedPhotos.includes(photoUrl)) {

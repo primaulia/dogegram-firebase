@@ -5,7 +5,11 @@ import firebase_app from "@/firebase/config";
 
 const auth = getAuth(firebase_app);
 
-export const AuthContext = createContext<{ user?: User }>({});
+interface AuthContextValue {
+  user: User | null; // Replace `any` with the actual user object type
+}
+
+export const AuthContext = createContext<AuthContextValue>({ user: null });
 
 export const useAuthContext = () => useContext(AuthContext);
 
