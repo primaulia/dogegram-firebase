@@ -60,11 +60,13 @@ On top of the features listed in the challenge documentation, I'm taking a creat
 
 ![Screenshot 2024-04-20 at 10 58 18 PM](https://github.com/primaulia/dogegram-firebase/assets/1294303/1a1a1919-f8a8-4b0e-9623-46cf11caf1f3)
 
-I'm keeping the structure of the firestorm simple with 2 collections that are all tied to the user authenticated to the app (1 User -> many breeds, 1 User -> many photos). The reasons for this decision are:
+I'm keeping the structure of the firestorm simple with 2 collections that are all tied to the user authenticated to the app (1 User -> can save many breeds, 1 User -> can like many photos). The reasons for this decision are:
 
 - Future-proofing the data structure should we need to query the `breeds` and `doggos` (photos) data further
 - Allowing users to switch breeds and keeping the old photos that they've liked
 - Minimize the amount of data read and transferred from the Firestore, this will significantly reduce the cost of the Firestore usage.
+
+I also added the type of the breeds saved whether it's a `Sub-breed` or `Parent` breed, and the parent breed name if it's relevant. This will allow the system to correctly retrieve the photos according to the breed type (parent or sub-breed)
 
 ### Raw Data & Rules Screenshots
 ![Screenshot 2024-04-20 at 6 05 42 PM](https://github.com/primaulia/dogegram-firebase/assets/1294303/6d9689b7-6bed-4545-9dc8-2e0258b72c97)
@@ -77,9 +79,28 @@ I'm keeping the structure of the firestorm simple with 2 collections that are al
 
 ### Known problem
 
-- Breeds and Sub-breeds data are not clean. At the moment, we have manually sanitize the data on the fly on every request at home page
+- Breeds and Sub-breeds data from the [`Dog API`](https://dog.ceo/dog-api/documentation/) are stored at a multi-tier level. At the moment, we have to [manually sanitize the data](https://github.com/primaulia/dogegram-firebase/blob/5a4f5ad3e9ee5b477d467f017cef96ba2ad89b59/src/lib/data.ts#L68) on the fly on every request on the home page. The task needed was done in O(n)^2 operation as we need to go through sub-breeds data too.
+- We are at the mercy of the API call, if it's down or it becomes unreliable, it will greatly affect the app.
+
+### Proposed solution
+
+- Decouple the API call and store the function into the Firebase function. I added a diagram below to help explain the flow.
+
+![Screenshot 2024-04-20 at 11 20 52 PM](https://github.com/primaulia/dogegram-firebase/assets/1294303/ce1ac494-a3c8-4a0d-a8cc-8a7a1cdca0f8)
+
+- By doing so, we can call the API once periodically. This is under the assumption that the data will not change much.
+- We can also enable the Firestore cache and offline mechanism that will greatly improve the data fetching process. The cache should only be busted when the Firebase function is triggered.
 
 ## Unit test specs
 
-TODO
+Assuming that we're implementing the Firebase function. The main bulk of the test should be used to validate the data sanitization process. Some of the crucial process that needs to be tested are:
+- Ensure that the data cleaned is flat with no duplication. It also must combine both the parent and sub-breed.
+- Ensure that the breeds stored in the Firestore are tagged with the correct type.
 
+On the react level, we also need to do e2e test to ensure that:
+- Once the breeds is saved to the Firestore, the breeds are displayed
+- Once the breeds are selected, the feed are displayed according to the chosen breeds
+- Once the photos are liked, it's stored in the Firestore
+
+  
+- 
