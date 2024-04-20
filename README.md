@@ -2,105 +2,96 @@
 
 ![Screenshot 2024-04-20 at 5 50 12 PM](https://github.com/primaulia/dogegram-firebase/assets/1294303/9bd0c6d6-246f-46b3-8e3e-0d0ac3a9abe7)
 
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app). The application data is hosted at [Firebase](https://firebase.google.com/) and the data is all stored in [Firestore](https://firebase.google.com/docs/firestore).
+This project is a lovable dog photo app built with Next.js and data hosted on Firebase. Users can explore and favorite photos of various dog breeds.
 
-## The application
+## Key technologies
 
-- Public URL can be viewed [here](https://dogegram-ad8a9.web.app/)
-- The site has been laid out responsively on any device, best viewed on the latest modern browser
-- To run this app locally on your computer:
-  - Clone the repo -> `gh repo clone primaulia/dogegram-firebase`
-  - Go to the directory -> `cd dogegram-firebase`
-  - Run the app -> `yarn dev`
-  - It should run at a specific port in your localhost. Most of the time it'll be `localhost:3000`
+- Next.js (front-end framework)
+- Firebase (backend with Firestore database)'
+
+## Live Demo
+
+View the deployed app at https://dogegram-ad8a9.web.app/
+
+## Running locally
+
+1. Clone the repository: `gh repo clone primaulia/dogegram-firebase`
+2. Navigate to the project directory: `cd dogegram-firebase`
+3. Install dependencies: `yarn install (or npm install)`
+4. Start the development server: `yarn dev (or npm run dev)`
+5. The app should run at `http://localhost:3000 (or a different port)`
  
-### Additional developed features
+### Additional Features
 
-On top of the features listed in the challenge documentation, I'm taking a creative approach to add additional features that I find relevant to use the app better.
+Beyond the core functionality, Doggogram boasts several user-friendly features:
 
-- Simple breeds management feature
-
-  TODO screenshots
-
-  This feature will allow users to undo their choices once they've picked their chosen breed. This will allow them to explore other dog photos.
+- **Simple breeds management**: Undo breed selections to explore more dog photos. 
   
-- Search breeds feature
-  
+- **Search breeds feature**: Easily find specific breeds using a keyword search  
   ![Screenshot 2024-04-20 at 6 00 06 PM](https://github.com/primaulia/dogegram-firebase/assets/1294303/4eccb8ea-3f5c-477e-9fe1-d3c57b776cad)
 
-  Type any keyword relevant to any of your breed names. It should filter the breed list.
-
-- `My favorite doggos` page
+- **`My Favorite Doggos` Page**: Track and manage your favorited dog photos.
   
   ![Screenshot 2024-04-20 at 6 01 25 PM](https://github.com/primaulia/dogegram-firebase/assets/1294303/a5e201f5-cad9-4fc2-bbd2-f4073e557ce5)
 
-  After liking the photos on your [feed page](https://dogegram-ad8a9.web.app/feed). The liked photos will be collected on this page. Users will also be able to remove their favorite photos on this page.
-
-#### Future features and improvements
-- `Surprise me` feature
-  
-  I will implement a feature that will allow users to add random breeds. This will let users explore more photos from breeds they're not familiar with.
-
-- Refactor the `SavedBreeds` state
-
-  Reduce the API call to the Firestore by sharing the `SavedBreeds` state through React's context.
-
-- Partial pre-rendering of the breed state
-
-  Currently, all data from the API are displayed at render. I could improve this by only loading a few and suspending the rendering once it's needed using the built-in `Next.js` pre-render mechanism.
-
-- Firestore optimization
-  Indexing the Firestore data to improve the data fetching duration.
-
-- Data sanitization and decoupling from React's project
-
-  Read more below.
+#### Future Enhancements:
+- `Surprise me` feature: Explore random dog breeds for unexpected discoveries
+- Saved Breeds State Optimization: Reduce API calls by sharing the SavedBreeds state using React Context.
+- Partial Pre-rendering: Improve performance by loading breeds and photo feeds incrementally using Next.js' built-in pre-rendering.
+- Firestore Optimization: Enhance data fetching speed by indexing Firestore data.
+- Data Sanitization & Decoupling: Detach data manipulation from the React app (details below).
 
 ## Firestore structure
 
+The Firestore schema is designed for simplicity and future scalability. It uses mainly two extra collections on top of the authenticated users:
 ![Screenshot 2024-04-20 at 10 58 18 PM](https://github.com/primaulia/dogegram-firebase/assets/1294303/1a1a1919-f8a8-4b0e-9623-46cf11caf1f3)
 
-I'm keeping the structure of the firestorm simple with 2 collections that are all tied to the user authenticated to the app (1 User -> can save many breeds, 1 User -> can like many photos). The reasons for this decision are:
-
-- Future-proofing the data structure should we need to query the `breeds` and `doggos` (photos) data further
-- Allowing users to switch breeds and keeping the old photos that they've liked
-- Minimize the amount of data read and transferred from the Firestore, this will significantly reduce the cost of the Firestore usage.
-
-I also added the type of the breeds saved whether it's a `Sub-breed` or `Parent` breed, and the parent breed name if it's relevant. This will allow the system to correctly retrieve the photos according to the breed type (parent or sub-breed)
+This structure allows:
+- Flexible querying of breeds and photos
+- Efficient tracking of user breed's preference
+- Reduced data transfer and Firestore usage costs.
+- Breed data includes type information (Sub-breed or Parent) and the parent breed name (if applicable) for accurate photo retrieval.
 
 ### Raw Data & Rules Screenshots
 ![Screenshot 2024-04-20 at 6 05 42 PM](https://github.com/primaulia/dogegram-firebase/assets/1294303/6d9689b7-6bed-4545-9dc8-2e0258b72c97)
 ![Screenshot 2024-04-20 at 6 05 48 PM](https://github.com/primaulia/dogegram-firebase/assets/1294303/e0babf23-b76c-4b40-b5a8-d880768bb257)
 ![Screenshot 2024-04-20 at 11 03 18 PM](https://github.com/primaulia/dogegram-firebase/assets/1294303/22ce530a-9dfc-4186-b569-a9e4ed12a2d5)
 
-## Refactoring
+## Refactoring with Node.js Firebase Function
 
 > Provide a written explanation of how you would refactor the solution to include a Node.js Firebase function that connects to the dog.ceo https://dog.ceo/api/breeds/list/all API endpoint and fattens the data into a single array of strings.
 
 ### Known problem
 
-- Breeds and Sub-breeds data from the [`Dog API`](https://dog.ceo/dog-api/documentation/) are stored at a multi-tier level. At the moment, we have to [manually sanitize the data](https://github.com/primaulia/dogegram-firebase/blob/5a4f5ad3e9ee5b477d467f017cef96ba2ad89b59/src/lib/data.ts#L68) on the fly on every request on the home page. The task needed was done in O(n)^2 operation as we need to go through sub-breeds data too.
-- We are at the mercy of the API call, if it's down or it becomes unreliable, it will greatly affect the app.
+Currently, the app retrieves dog breed data directly from the dog.ceo API (https://dog.ceo/dog-api/) on every homepage load. This approach can be inefficient and fragile. Here's a proposed solution:
 
-### Proposed solution
-
-- Decouple the API call and store the function into the Firebase function. I added a diagram below to help explain the flow.
+**Problem:** Multi-tiered breed data requires manual on-the-fly data manipulation (O(n)^2 complexity), relying on an external API introduces a single point of failure.
+**Solution:**
 
 ![Screenshot 2024-04-20 at 11 20 52 PM](https://github.com/primaulia/dogegram-firebase/assets/1294303/ce1ac494-a3c8-4a0d-a8cc-8a7a1cdca0f8)
 
-- By doing so, we can call the API once periodically. This is under the assumption that the data will not change much.
-- We can also enable the Firestore cache and offline mechanism that will greatly improve the data fetching process. The cache should only be busted when the Firebase function is triggered.
+- Implement a Node.js Firebase function to periodically fetch and process dog breed data from the API.
+- This data can be:
+  - Fetched once and stored in Firestore
+  - Flattened into a single array with no duplicates
+  - Combined with parent and sub-breed information (if applicable)
+  - Tagged with breed type for accurate retrieval
+  
+**Benefits:**
+- Reduced API calls and improved performance
+- Increased reliability by caching processed data in Firestore
+- Offline functionality (if Firestore cache is enabled)
 
 ## Unit test specs
 
+## Unit Testing Strategies
+
 Assuming that we're implementing the Firebase function. The main bulk of the test should be used to validate the data sanitization process. Some of the crucial process that needs to be tested are:
-- Ensure that the data cleaned is flat with no duplication. It also must combine both the parent and sub-breed.
-- Ensure that the breeds stored in the Firestore are tagged with the correct type.
 
-On the react level, we also need to do e2e test to ensure that:
-- Once the breeds is saved to the Firestore, the breeds are displayed
-- Once the breeds are selected, the feed are displayed according to the chosen breeds
-- Once the photos are liked, it's stored in the Firestore
+- Ensure data sanitization flattens and combines breed data correctly.
+- Verify breed types are tagged appropriately.
 
-  
-- 
+On the react level, we also need to do an e2e test to ensure that:
+- Confirm breeds saved are displayed after saving in Firestore.
+- Validate breed selection triggers correct feed display.
+- Test successful storage and retrieval of liked photos.
