@@ -16,16 +16,18 @@ import { hasKeyword } from "@/lib/utils";
 export default function BreedList({
   breeds,
 }: {
-  breeds: { name: string; iconUrl: string }[];
+  breeds: { id: string; name: string; iconUrl: string; type: "base" | "sub" }[];
 }) {
   const { user } = useAuthContext();
   const router = useRouter();
 
   const [savedBreeds, setSavedBreeds] = useState<
-    { name: string; iconUrl: string }[]
+    { name: string; iconUrl: string; type: "base" | "sub" }[]
   >([]);
   const [breedsList, setBreedsList] =
-    useState<{ name: string; iconUrl: string }[]>(breeds);
+    useState<
+      { id: string; name: string; iconUrl: string; type: "base" | "sub" }[]
+    >(breeds);
 
   useEffect(() => {
     const fetchSavedBreeds = async () => {
@@ -71,6 +73,7 @@ export default function BreedList({
     const { error } = await saveBreed({
       name: breedName,
       iconUrl: breeds.find((b) => b.name === breedName)!.iconUrl,
+      type: breeds.find((b) => b.name === breedName)!.type,
       user_id: user!.uid,
     });
 
@@ -80,6 +83,7 @@ export default function BreedList({
         {
           name: breedName,
           iconUrl: breeds.find((b) => b.name === breedName)!.iconUrl,
+          type: breeds.find((b) => b.name === breedName)!.type,
         },
       ]);
     } else {
@@ -137,9 +141,9 @@ export default function BreedList({
       <BreedSearchBar handleSearch={handleSearch} />
       {breedsList.length ? (
         <ul className="flex flex-wrap justify-center gap-1 md:gap-3">
-          {breedsList.map(({ name, iconUrl }) => (
+          {breedsList.map(({ id, name, iconUrl }) => (
             <BreedIcon
-              key={name}
+              key={id}
               breed={name}
               image={iconUrl}
               selected={savedBreeds.some(
