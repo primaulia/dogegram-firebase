@@ -42,6 +42,7 @@ Beyond the core functionality, Doggogram boasts several user-friendly features:
 - Saved Breeds State Optimization: Reduce API calls by sharing the SavedBreeds state using React Context.
 - Partial Pre-rendering: Improve performance by loading breeds and photo feeds incrementally using Next.js' built-in pre-rendering.
 - Firestore Optimization: Enhance data fetching speed by indexing Firestore data.
+- Enable SSR configuration on the Next.js site to allow site to be accessed without Javascript.
 - Data Sanitization & Decoupling: Detach data manipulation from the React app (details below).
 
 ## Firestore structure
@@ -66,26 +67,26 @@ This structure allows:
 
 ### Known problem
 
-Currently, the app retrieves dog breed data directly from the dog.ceo API (https://dog.ceo/dog-api/) on every homepage load. This approach can be inefficient and fragile. Here's a proposed solution:
+Currently, the app retrieves dog breed data tightly dependent on the dog.ceo API (https://dog.ceo/dog-api/) on every homepage load. This approach can be inefficient and fragile. Here's a proposed solution:
 
-**Problem:** Multi-tiered breed data requires manual on-the-fly data manipulation (O(n)^2 complexity), relying on an external API introduces a single point of failure.
+**Problem:** Multi-tiered breed data requires manual on-the-fly data manipulation (O(n)^2 complexity), and relying on an external API introduces a single point of failure.
 **Solution:**
 
 ![Screenshot 2024-04-20 at 11 20 52 PM](https://github.com/primaulia/dogegram-firebase/assets/1294303/ce1ac494-a3c8-4a0d-a8cc-8a7a1cdca0f8)
 
-- Implement a Node.js Firebase function to periodically fetch and process dog breed data from the API.
+- Implement a Node.js Firebase function to periodically fetch and process the dog breed data from the API.
 - This data can be:
-  - Fetched once and stored in Firestore
+  - Fetched once each period and stored in Firestore
   - Flattened into a single array with no duplicates
   - Combined with parent and sub-breed information (if applicable)
   - Tagged with breed type for accurate retrieval
+  - Should we need to switch to a different API source, the fetching and data sanitization process can also be customized. 
   
 **Benefits:**
-- Reduced API calls and improved performance
-- Increased reliability by caching processed data in Firestore
-- Offline functionality (if Firestore cache is enabled)
-
-## Unit test specs
+- Reduced API calls and improved performance.
+- Increased reliability by caching processed data in Firestore.
+- Offline functionality (if Firestore cache is enabled).
+- The stored data in our Firestore will be agnostic to the API source.
 
 ## Unit Testing Strategies
 
