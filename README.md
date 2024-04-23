@@ -67,9 +67,8 @@ This structure allows:
 
 ### Known problem
 
-Currently, the app retrieves dog breed data tightly dependent on the dog.ceo API (https://dog.ceo/dog-api/) on every homepage load. This approach can be inefficient and fragile. Here's a proposed solution:
-
 **Problem:** Multi-tiered breed data requires manual on-the-fly data manipulation (O(n)^2 complexity), and relying on an external API introduces a single point of failure.
+
 **Solution:**
 
 ![Screenshot 2024-04-20 at 11 20 52 PM](https://github.com/primaulia/dogegram-firebase/assets/1294303/ce1ac494-a3c8-4a0d-a8cc-8a7a1cdca0f8)
