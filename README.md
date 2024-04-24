@@ -42,7 +42,7 @@ Beyond the core functionality, Doggogram boasts several user-friendly features:
 - Saved Breeds State Optimization: Reduce API calls by sharing the SavedBreeds state using React Context.
 - Partial Pre-rendering: Improve performance by loading breeds and photo feeds incrementally using Next.js' built-in pre-rendering.
 - Firestore Optimization: Enhance data fetching speed by indexing Firestore data.
-- Enable SSR configuration on the Next.js site to allow site to be accessed without Javascript.
+- Enable SSR configuration on the Next.js site to allow the site to be accessible without Javascript.
 - Data Sanitization & Decoupling: Detach data manipulation from the React app (details below).
 
 ## Firestore structure
