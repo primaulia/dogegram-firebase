@@ -8,6 +8,7 @@ import { useAuthContext } from "@/context/AuthContext";
 import BreedIcon from "@/app/components/BreedIcon";
 import BreedSearchBar from "@/app/components/BreedSearchBar";
 import Button from "@/app/components/Button";
+import Notification from "@/app/components/Notification";
 import { deleteBreed, getBreedsByUserId } from "@/firebase/firestore/breeds";
 import { saveBreed } from "@/firebase/firestore/breeds";
 import { futura } from "@/app/ui/fonts";
@@ -21,6 +22,7 @@ export default function BreedList({ breeds }: { breeds: TBreed[] }) {
 
   const [savedBreeds, setSavedBreeds] = useState<TBreed[]>([]);
   const [breedsList, setBreedsList] = useState<TBreed[]>(breeds);
+  const [showNotification, setShowNotification] = useState<boolean>(false);
 
   useEffect(() => {
     const fetchSavedBreeds = async () => {
@@ -60,8 +62,12 @@ export default function BreedList({ breeds }: { breeds: TBreed[] }) {
       return;
     }
 
-    if (savedBreeds.length >= 3) {
+    if (savedBreeds.length === 3) {
       console.error("Maximum amount of breeds chosen, cannot add more breed");
+      setShowNotification(true);
+      setTimeout(() => {
+        setShowNotification(false);
+      }, 3000);
       return false;
     }
 
@@ -101,7 +107,14 @@ export default function BreedList({ breeds }: { breeds: TBreed[] }) {
 
   return (
     <>
-      <div className="flex justify-center">
+      <div className="flex justify-center relative">
+        <Notification shown={showNotification}>
+          <h3 className={futura.className}>
+            You can only choose 3 breeds at max. Please remove one if you wish
+            to choose a different breed 🙏
+          </h3>
+        </Notification>
+
         <div className="bg-gray-50 rounded-md p-2 md:p-3 w-full md:w-3/4 md:mb-4">
           <h2 className={`${futura.className} md:text-center my-2`}>
             {savedBreeds.length
