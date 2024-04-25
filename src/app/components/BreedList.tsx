@@ -93,11 +93,11 @@ export default function BreedList({ breeds }: { breeds: TBreed[] }) {
     const { error, result } = await saveBreed(savedBreedData);
 
     if (result) {
-      delete savedBreedData.user_id;
+      const { user_id, ...rest } = savedBreedData;
 
       return {
         id: result.id, // store the default id from firestore in state
-        ...savedBreedData,
+        ...rest,
       };
     } else {
       console.error(error);

@@ -3,7 +3,7 @@ export type BreedStore = {
   iconUrl: string;
   type: "base" | "sub";
   parent?: string;
-  user_id?: string;
+  user_id: string;
 };
 
 export type DoggoStore = {
