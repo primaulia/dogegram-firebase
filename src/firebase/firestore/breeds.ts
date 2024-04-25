@@ -54,6 +54,7 @@ export async function deleteBreedById(breedId: string, userId: string) {
     const data = docSnap.data();
 
     if (docSnap.exists() && data?.user_id === userId) {
+      // ensure deleted data is owned by the user
       result = await deleteDoc(breedRef);
     }
   } catch (e) {
