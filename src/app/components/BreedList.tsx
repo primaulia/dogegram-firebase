@@ -217,7 +217,7 @@ export default function BreedList({ breeds }: { breeds: TBreed[] }) {
 
   const handleSearch = useDebouncedCallback((term: string) => {
     if (term) {
-      setBreedsList(breedsList.filter((breed) => hasKeyword(breed.name, term)));
+      setBreedsList(breeds.filter((breed) => hasKeyword(breed.name, term)));
     } else {
       setBreedsList(breeds);
     }
