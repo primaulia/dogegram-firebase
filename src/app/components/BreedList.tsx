@@ -229,24 +229,23 @@ export default function BreedList({ breeds }: { breeds: TBreed[] }) {
         )}
       </div>
       <BreedSearchBar handleSearch={handleSearch} />
-      {breedsList.length ? (
-        <ul className="flex flex-wrap justify-center gap-1 md:gap-3">
-          {breedsList.map((breed) => (
-            <BreedIcon
-              key={breed.id}
-              breed={breed}
-              selected={savedBreeds.some((savedBreed) =>
-                savedBreed.type === "sub"
-                  ? savedBreed.parent === breed.parent &&
-                    savedBreed.name === breed.name
-                  : savedBreed.name === breed.name
-              )}
-              blurred={true}
-              handleClick={handleIconClick}
-            />
-          ))}
-        </ul>
-      ) : (
+      <ul className="flex flex-wrap justify-center gap-1 md:gap-3">
+        {breedsList.map((breed) => (
+          <BreedIcon
+            key={breed.id}
+            breed={breed}
+            selected={savedBreeds.some((savedBreed) =>
+              savedBreed.type === "sub"
+                ? savedBreed.parent === breed.parent &&
+                  savedBreed.name === breed.name
+                : savedBreed.name === breed.name
+            )}
+            blurred={true}
+            handleClick={handleIconClick}
+          />
+        ))}
+      </ul>
+      {!breedsList.length && (
         <h2 className={`${futura.className} my-6 text-center`}>
           No breed found with that keyword. Please try again 🙏.
         </h2>
