@@ -3,12 +3,11 @@
 import { useDebouncedCallback } from "use-debounce";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import Link from "next/link";
-import clsx from "clsx";
 import { useAuthContext } from "@/context/AuthContext";
+import BreedBanner from "@/app/components/BreedBanner";
+import BreedEmptyBanner from "@/app/components/BreedEmptyBanner";
 import BreedIcon from "@/app/components/BreedIcon";
 import BreedSearchBar from "@/app/components/BreedSearchBar";
-import Button from "@/app/components/Button";
 import Notification from "@/app/components/Notification";
 import {
   deleteBreedById,
@@ -219,66 +218,15 @@ export default function BreedList({ breeds }: { breeds: TBreed[] }) {
             to choose a different breed 🙏
           </h3>
         </Notification>
-
-        <div className="bg-gray-50 rounded-md p-2 md:p-3 w-full md:w-3/4 md:mb-4">
-          <h2 className={`${futura.className} md:text-center my-2`}>
-            {savedBreeds.length
-              ? "Your selected doggo breeds"
-              : "Pick your top 3 doggo breeds 💖"}
-          </h2>
-          {savedBreeds.length ? (
-            <div>
-              <ul className="flex justify-start md:justify-center flex-wrap gap-1 md:gap-2">
-                {savedBreeds.map((breed) => (
-                  <BreedIcon
-                    key={breed.id}
-                    breed={breed}
-                    selected={true}
-                    blurred={false}
-                    handleClick={handleSavedIconClick}
-                  />
-                ))}
-              </ul>
-              <div className="flex gap-2">
-                <Link
-                  href="/feed"
-                  className={`${savedBreeds.length === 3 ? "w-full" : "w-1/2"}`}
-                >
-                  <Button className="mt-4 w-full">View your feed</Button>
-                </Link>
-                <Button
-                  className={clsx(
-                    `mt-4 ${
-                      savedBreeds?.length > 0 && savedBreeds?.length < 3
-                        ? "w-1/2"
-                        : "hidden"
-                    }`
-                  )}
-                  onClick={handleSurpriseClick}
-                  secondary="true"
-                >
-                  Surprise me
-                </Button>
-              </div>
-            </div>
-          ) : (
-            <div>
-              <div className="flex justify-center">
-                <p className="bg-gray-50 rounded-md md:p-3 md:max-w-[600px] mb-2 md:mb-4">
-                  Once you&apos;ve made your choice, you will see a list of
-                  pawesome photos curated especially for you. 🐾
-                </p>
-              </div>
-              <Button
-                className="mt-4 w-full"
-                onClick={handleSurpriseClick}
-                secondary="true"
-              >
-                Surprise me
-              </Button>
-            </div>
-          )}
-        </div>
+        {savedBreeds.length ? (
+          <BreedBanner
+            savedBreeds={savedBreeds}
+            handleSavedIconClick={handleSavedIconClick}
+            handleSurpriseClick={handleSurpriseClick}
+          />
+        ) : (
+          <BreedEmptyBanner handleSurpriseClick={handleSurpriseClick} />
+        )}
       </div>
       <BreedSearchBar handleSearch={handleSearch} />
       {breedsList.length ? (

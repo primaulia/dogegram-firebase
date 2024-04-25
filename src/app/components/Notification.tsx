@@ -5,7 +5,7 @@ interface NotificationProps extends React.HTMLAttributes<HTMLButtonElement> {
   shown: boolean;
 }
 
-export default function Button({
+export default function Notification({
   children,
   className,
   shown,
