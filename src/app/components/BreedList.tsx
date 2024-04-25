@@ -4,6 +4,7 @@ import { useDebouncedCallback } from "use-debounce";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
+import clsx from "clsx";
 import { useAuthContext } from "@/context/AuthContext";
 import BreedIcon from "@/app/components/BreedIcon";
 import BreedSearchBar from "@/app/components/BreedSearchBar";
@@ -29,12 +30,13 @@ export default function BreedList({ breeds }: { breeds: TBreed[] }) {
       try {
         const { result: snapshots } = await getBreedsByUserId(user!.uid);
         const savedBreedsData: TBreed[] = snapshots!.map((doc) => {
-          const { name, iconUrl, type } = doc.data();
+          const { name, iconUrl, type, parent } = doc.data();
 
           return {
             name,
             iconUrl,
             type,
+            parent,
           };
         });
 
@@ -79,20 +81,14 @@ export default function BreedList({ breeds }: { breeds: TBreed[] }) {
     };
 
     if (breed.type === "sub") {
-      savedBreedData.parent = breeds.find((b) => b.name === breed.name)!.parent;
+      savedBreedData.parent = breed.parent;
     }
 
     const { error } = await saveBreed(savedBreedData);
 
     if (!error) {
-      setSavedBreeds([
-        ...savedBreeds,
-        {
-          name: breed.name,
-          iconUrl: breed.iconUrl,
-          type: breed.type,
-        },
-      ]);
+      delete savedBreedData.user_id;
+      setSavedBreeds([...savedBreeds, savedBreedData]);
     } else {
       console.error(error);
     }
@@ -104,6 +100,43 @@ export default function BreedList({ breeds }: { breeds: TBreed[] }) {
       setBreedsList(breeds);
     }
   }, 300);
+
+  const handleSurpriseClick = async () => {
+    // Shuffle array
+    const shuffled = [...breedsList].sort(() => 0.5 - Math.random());
+
+    // Get sub-array of first n elements after shuffled
+    let randomBreeds = shuffled.slice(0, 3 - savedBreeds.length);
+
+    randomBreeds.forEach(async (breed) => {
+      const savedBreedData: BreedStore = {
+        name: breed.name,
+        iconUrl: breed.iconUrl,
+        type: breed.type,
+        user_id: user!.uid,
+      };
+
+      if (breed.type === "sub") {
+        savedBreedData.parent = breed.parent;
+      }
+
+      const { error, result } = await saveBreed(savedBreedData);
+
+      if (!error) {
+        setSavedBreeds((prevSavedBreds) => [
+          ...prevSavedBreds,
+          {
+            name: breed.name,
+            iconUrl: breed.iconUrl,
+            type: breed.type,
+            parent: breed.parent,
+          },
+        ]);
+      } else {
+        console.error(error);
+      }
+    });
+  };
 
   return (
     <>
@@ -134,19 +167,43 @@ export default function BreedList({ breeds }: { breeds: TBreed[] }) {
                   />
                 ))}
               </ul>
-              <Link
-                href="/feed"
-                className="my-2 bg-yellow-600 text-white rounded-md hover:bg-yellow-500 text-sm font-medium"
-              >
-                <Button className="mt-4 w-full">View your feed</Button>
-              </Link>
+              <div className="flex gap-2">
+                <Link
+                  href="/feed"
+                  className={`${savedBreeds.length === 3 ? "w-full" : "w-1/2"}`}
+                >
+                  <Button className="mt-4 w-full">View your feed</Button>
+                </Link>
+                <Button
+                  className={clsx(
+                    `mt-4 ${
+                      savedBreeds?.length > 0 && savedBreeds?.length < 3
+                        ? "w-1/2"
+                        : "hidden"
+                    }`
+                  )}
+                  onClick={handleSurpriseClick}
+                  secondary="true"
+                >
+                  Surprise me
+                </Button>
+              </div>
             </>
           ) : (
-            <div className="flex justify-center">
-              <p className="bg-gray-50 rounded-md md:p-3 md:max-w-[600px] mb-2 md:mb-4">
-                Once you&apos;ve made your choice, you will see a list of
-                pawesome photos curated especially for you. 🐾
-              </p>
+            <div>
+              <div className="flex justify-center">
+                <p className="bg-gray-50 rounded-md md:p-3 md:max-w-[600px] mb-2 md:mb-4">
+                  Once you&apos;ve made your choice, you will see a list of
+                  pawesome photos curated especially for you. 🐾
+                </p>
+              </div>
+              <Button
+                className="mt-4 w-full"
+                onClick={handleSurpriseClick}
+                secondary="true"
+              >
+                Surprise me
+              </Button>
             </div>
           )}
         </div>
