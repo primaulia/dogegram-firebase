@@ -4,6 +4,10 @@
 
 This project is a lovable dog photo app built with Next.js and data hosted on Firebase. Users can explore and favorite photos of various dog breeds.
 
+## Changelogs
+
+- [V1.1](https://github.com/primaulia/dogegram-firebase/releases/tag/v1.1)
+
 ## Key technologies
 
 - Next.js (front-end framework)
@@ -38,7 +42,7 @@ Beyond the core functionality, Doggogram boasts several user-friendly features:
   ![Apr-21-2024 00-01-30](https://github.com/primaulia/dogegram-firebase/assets/1294303/f83d7b93-99c7-4895-acd6-58c55fb30252)
 
 #### Future Enhancements:
-- `Surprise me` feature: Explore random dog breeds for unexpected discoveries
+- ~~`Surprise me` feature: Explore random dog breeds for unexpected discoveries~~
 - Saved Breeds State Optimization: Reduce API calls by sharing the SavedBreeds state using React Context.
 - Partial Pre-rendering: Improve performance by loading breeds and photo feeds incrementally using Next.js' built-in pre-rendering.
 - Firestore Optimization: Enhance data fetching speed by indexing Firestore data.
