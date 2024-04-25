@@ -96,13 +96,35 @@ export default function BreedList({ breeds }: { breeds: TBreed[] }) {
       delete savedBreedData.user_id;
 
       return {
-        id: result.id,
+        id: result.id, // store the default id from firestore in state
         ...savedBreedData,
       };
     } else {
       console.error(error);
       return;
     }
+  };
+
+  const prepareBreedForState = (storedBreed: TBreed | undefined) => {
+    const breedStored: TBreed = {
+      id: storedBreed!.id,
+      name: storedBreed!.name,
+      iconUrl: storedBreed!.iconUrl,
+      type: storedBreed!.type,
+    };
+    if (storedBreed?.parent) {
+      breedStored.parent = storedBreed?.parent;
+    }
+
+    return breedStored;
+  };
+
+  const showMaxBreedNotif = () => {
+    console.error("Maximum amount of breeds chosen, cannot add more breed");
+    setShowNotification(true);
+    setTimeout(() => {
+      setShowNotification(false);
+    }, 3000);
   };
 
   const handleSavedIconClick = async (breed: TBreed) => {
@@ -118,24 +140,12 @@ export default function BreedList({ breeds }: { breeds: TBreed[] }) {
     }
 
     if (savedBreeds.length === 3) {
-      console.error("Maximum amount of breeds chosen, cannot add more breed");
-      setShowNotification(true);
-      setTimeout(() => {
-        setShowNotification(false);
-      }, 3000);
-      return false;
+      showMaxBreedNotif();
+      return;
     }
 
     const storedBreed = await storeBreed(breed);
-    const breedStored: TBreed = {
-      id: storedBreed!.id,
-      name: storedBreed!.name,
-      iconUrl: storedBreed!.iconUrl,
-      type: storedBreed!.type,
-    };
-    if (breed.parent) {
-      breedStored.parent = breed.parent;
-    }
+    const breedStored: TBreed = prepareBreedForState(storedBreed);
 
     if (breedStored) {
       setSavedBreeds([...savedBreeds, breedStored]);
@@ -161,24 +171,12 @@ export default function BreedList({ breeds }: { breeds: TBreed[] }) {
     }
 
     if (savedBreeds.length === 3) {
-      console.error("Maximum amount of breeds chosen, cannot add more breed");
-      setShowNotification(true);
-      setTimeout(() => {
-        setShowNotification(false);
-      }, 3000);
+      showMaxBreedNotif();
       return false;
     }
 
     const storedBreed = await storeBreed(breed);
-    const breedStored: TBreed = {
-      id: storedBreed!.id,
-      name: storedBreed!.name,
-      iconUrl: storedBreed!.iconUrl,
-      type: storedBreed!.type,
-    };
-    if (breed.parent) {
-      breedStored.parent = breed.parent;
-    }
+    const breedStored: TBreed = prepareBreedForState(storedBreed);
 
     if (breedStored) {
       setSavedBreeds([...savedBreeds, breedStored]);
@@ -187,7 +185,7 @@ export default function BreedList({ breeds }: { breeds: TBreed[] }) {
 
   const handleSurpriseClick = async () => {
     // Shuffle array
-    const shuffled = [...breedsList].sort(() => 0.5 - Math.random());
+    const shuffled = [...breeds].sort(() => 0.5 - Math.random());
 
     // Get sub-array of first n elements after shuffled
     let randomBreeds = shuffled.slice(0, 3 - savedBreeds.length);
@@ -195,18 +193,7 @@ export default function BreedList({ breeds }: { breeds: TBreed[] }) {
     const newSavedBreeds = await Promise.all(
       randomBreeds.map(async (breed) => {
         const storedBreed = await storeBreed(breed);
-
-        const breedStored: TBreed = {
-          id: storedBreed!.id,
-          name: storedBreed!.name,
-          iconUrl: storedBreed!.iconUrl,
-          type: storedBreed!.type,
-        };
-        if (breed.parent) {
-          breedStored.parent = breed.parent;
-        }
-
-        return breedStored;
+        return prepareBreedForState(storedBreed);
       })
     );
 
@@ -240,7 +227,7 @@ export default function BreedList({ breeds }: { breeds: TBreed[] }) {
               : "Pick your top 3 doggo breeds 💖"}
           </h2>
           {savedBreeds.length ? (
-            <>
+            <div>
               <ul className="flex justify-start md:justify-center flex-wrap gap-1 md:gap-2">
                 {savedBreeds.map((breed) => (
                   <BreedIcon
@@ -273,7 +260,7 @@ export default function BreedList({ breeds }: { breeds: TBreed[] }) {
                   Surprise me
                 </Button>
               </div>
-            </>
+            </div>
           ) : (
             <div>
               <div className="flex justify-center">
