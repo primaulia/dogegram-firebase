@@ -16,7 +16,7 @@ export type ImagesResponse = {
 };
 
 export type TBreed = {
-  id?: string;
+  id: string;
   name: string;
   iconUrl: string;
   type: "base" | "sub";

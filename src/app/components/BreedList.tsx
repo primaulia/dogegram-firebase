@@ -10,7 +10,11 @@ import BreedIcon from "@/app/components/BreedIcon";
 import BreedSearchBar from "@/app/components/BreedSearchBar";
 import Button from "@/app/components/Button";
 import Notification from "@/app/components/Notification";
-import { deleteBreed, getBreedsByUserId } from "@/firebase/firestore/breeds";
+import {
+  deleteBreedById,
+  deleteBreedByName,
+  getBreedsByUserId,
+} from "@/firebase/firestore/breeds";
 import { saveBreed } from "@/firebase/firestore/breeds";
 import { futura } from "@/app/ui/fonts";
 import { hasKeyword } from "@/lib/utils";
@@ -30,14 +34,21 @@ export default function BreedList({ breeds }: { breeds: TBreed[] }) {
       try {
         const { result: snapshots } = await getBreedsByUserId(user!.uid);
         const savedBreedsData: TBreed[] = snapshots!.map((doc) => {
+          const id = doc.id;
           const { name, iconUrl, type, parent } = doc.data();
 
-          return {
+          const breedStored: TBreed = {
+            id,
             name,
             iconUrl,
             type,
-            parent,
           };
+
+          if (parent) {
+            breedStored.parent = parent;
+          }
+
+          return breedStored;
         });
 
         setSavedBreeds(savedBreedsData);
@@ -51,16 +62,58 @@ export default function BreedList({ breeds }: { breeds: TBreed[] }) {
     }
   }, [user]);
 
-  const handleIconClick = async (breed: TBreed) => {
+  const removeBreedById = async (breedId: string, userId: string) => {
+    await deleteBreedById(breedId, userId);
+    setSavedBreeds(savedBreeds.filter((b) => b.id != breedId));
+  };
+
+  const removeBreedByName = async (breed: TBreed, userId: string) => {
+    await deleteBreedByName(breed, userId);
+    setSavedBreeds(
+      savedBreeds.filter((b) =>
+        breed.type === "sub"
+          ? b.name !== breed.name && b.parent !== breed.parent
+          : b.name !== breed.name
+      )
+    );
+  };
+
+  const storeBreed = async (breed: TBreed) => {
+    const savedBreedData: BreedStore = {
+      name: breed.name,
+      iconUrl: breed.iconUrl,
+      type: breed.type,
+      user_id: user!.uid,
+    };
+
+    if (breed.type === "sub") {
+      savedBreedData.parent = breed.parent;
+    }
+
+    const { error, result } = await saveBreed(savedBreedData);
+
+    if (result) {
+      delete savedBreedData.user_id;
+
+      return {
+        id: result.id,
+        ...savedBreedData,
+      };
+    } else {
+      console.error(error);
+      return;
+    }
+  };
+
+  const handleSavedIconClick = async (breed: TBreed) => {
     if (!user) {
       console.error("User hasn't logged in yet");
       router.push("/login");
       return;
     }
 
-    if (savedBreeds.some((b) => b.name === breed.name)) {
-      await deleteBreed(breed.name, user.uid);
-      setSavedBreeds(savedBreeds.filter((b) => b.name !== breed.name));
+    if (savedBreeds.some((b) => b.id === breed.id)) {
+      removeBreedById(breed.id, user.uid);
       return;
     }
 
@@ -73,33 +126,64 @@ export default function BreedList({ breeds }: { breeds: TBreed[] }) {
       return false;
     }
 
-    const savedBreedData: BreedStore = {
-      name: breed.name,
-      iconUrl: breed.iconUrl,
-      type: breed.type,
-      user_id: user!.uid,
+    const storedBreed = await storeBreed(breed);
+    const breedStored: TBreed = {
+      id: storedBreed!.id,
+      name: storedBreed!.name,
+      iconUrl: storedBreed!.iconUrl,
+      type: storedBreed!.type,
     };
-
-    if (breed.type === "sub") {
-      savedBreedData.parent = breed.parent;
+    if (breed.parent) {
+      breedStored.parent = breed.parent;
     }
 
-    const { error } = await saveBreed(savedBreedData);
-
-    if (!error) {
-      delete savedBreedData.user_id;
-      setSavedBreeds([...savedBreeds, savedBreedData]);
-    } else {
-      console.error(error);
+    if (breedStored) {
+      setSavedBreeds([...savedBreeds, breedStored]);
     }
   };
-  const handleSearch = useDebouncedCallback((term: string) => {
-    if (term) {
-      setBreedsList(breedsList.filter((breed) => hasKeyword(breed.name, term)));
-    } else {
-      setBreedsList(breeds);
+
+  const handleIconClick = async (breed: TBreed) => {
+    if (!user) {
+      console.error("User hasn't logged in yet");
+      router.push("/login");
+      return;
     }
-  }, 300);
+
+    if (
+      savedBreeds.some((b) =>
+        breed.type === "sub"
+          ? b.name === breed.name && b.parent === breed.parent
+          : b.name === breed.name
+      )
+    ) {
+      removeBreedByName(breed, user.uid);
+      return;
+    }
+
+    if (savedBreeds.length === 3) {
+      console.error("Maximum amount of breeds chosen, cannot add more breed");
+      setShowNotification(true);
+      setTimeout(() => {
+        setShowNotification(false);
+      }, 3000);
+      return false;
+    }
+
+    const storedBreed = await storeBreed(breed);
+    const breedStored: TBreed = {
+      id: storedBreed!.id,
+      name: storedBreed!.name,
+      iconUrl: storedBreed!.iconUrl,
+      type: storedBreed!.type,
+    };
+    if (breed.parent) {
+      breedStored.parent = breed.parent;
+    }
+
+    if (breedStored) {
+      setSavedBreeds([...savedBreeds, breedStored]);
+    }
+  };
 
   const handleSurpriseClick = async () => {
     // Shuffle array
@@ -108,35 +192,36 @@ export default function BreedList({ breeds }: { breeds: TBreed[] }) {
     // Get sub-array of first n elements after shuffled
     let randomBreeds = shuffled.slice(0, 3 - savedBreeds.length);
 
-    randomBreeds.forEach(async (breed) => {
-      const savedBreedData: BreedStore = {
-        name: breed.name,
-        iconUrl: breed.iconUrl,
-        type: breed.type,
-        user_id: user!.uid,
-      };
+    const newSavedBreeds = await Promise.all(
+      randomBreeds.map(async (breed) => {
+        const storedBreed = await storeBreed(breed);
 
-      if (breed.type === "sub") {
-        savedBreedData.parent = breed.parent;
-      }
+        const breedStored: TBreed = {
+          id: storedBreed!.id,
+          name: storedBreed!.name,
+          iconUrl: storedBreed!.iconUrl,
+          type: storedBreed!.type,
+        };
+        if (breed.parent) {
+          breedStored.parent = breed.parent;
+        }
 
-      const { error, result } = await saveBreed(savedBreedData);
+        return breedStored;
+      })
+    );
 
-      if (!error) {
-        setSavedBreeds((prevSavedBreds) => [
-          ...prevSavedBreds,
-          {
-            name: breed.name,
-            iconUrl: breed.iconUrl,
-            type: breed.type,
-            parent: breed.parent,
-          },
-        ]);
-      } else {
-        console.error(error);
-      }
-    });
+    if (newSavedBreeds) {
+      setSavedBreeds([...savedBreeds, ...newSavedBreeds]);
+    }
   };
+
+  const handleSearch = useDebouncedCallback((term: string) => {
+    if (term) {
+      setBreedsList(breedsList.filter((breed) => hasKeyword(breed.name, term)));
+    } else {
+      setBreedsList(breeds);
+    }
+  }, 300);
 
   return (
     <>
@@ -159,11 +244,11 @@ export default function BreedList({ breeds }: { breeds: TBreed[] }) {
               <ul className="flex justify-start md:justify-center flex-wrap gap-1 md:gap-2">
                 {savedBreeds.map((breed) => (
                   <BreedIcon
-                    key={breed.name}
+                    key={breed.id}
                     breed={breed}
                     selected={true}
                     blurred={false}
-                    handleClick={handleIconClick}
+                    handleClick={handleSavedIconClick}
                   />
                 ))}
               </ul>
@@ -215,8 +300,11 @@ export default function BreedList({ breeds }: { breeds: TBreed[] }) {
             <BreedIcon
               key={breed.id}
               breed={breed}
-              selected={savedBreeds.some(
-                (savedBreed) => savedBreed.name === breed.name
+              selected={savedBreeds.some((savedBreed) =>
+                savedBreed.type === "sub"
+                  ? savedBreed.parent === breed.parent &&
+                    savedBreed.name === breed.name
+                  : savedBreed.name === breed.name
               )}
               blurred={true}
               handleClick={handleIconClick}
