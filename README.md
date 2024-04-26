@@ -67,8 +67,6 @@ This structure allows:
 
 ## Refactoring with Node.js Firebase Function
 
-> Provide a written explanation of how you would refactor the solution to include a Node.js Firebase function that connects to the dog.ceo https://dog.ceo/api/breeds/list/all API endpoint and fattens the data into a single array of strings.
-
 ### Known problem
 
 **Problem:** Multi-tiered breed data requires manual on-the-fly data manipulation (O(n)^2 complexity), and relying on an external API introduces a single point of failure.
